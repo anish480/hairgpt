@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.uv-cache/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Env files (commit .env.example only)
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE — keep .vscode tracked at the project level (Shopify CLI puts useful extension recs there)
+.idea/
+
+# Shopify CLI local state and dev certs
+hairgpt/.shopify/
+hairgpt/.shopify.lock
+
+# TLS keys / certs in general
+*.pem
+*.key
+
+# Build artifacts
+dist/
+build/
+extensions/*/build/
+extensions/*/dist/
+
+# Local credential files (should never appear — Secret Manager only)
+credsShopify*
+*.creds
