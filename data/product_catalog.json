@@ -1,0 +1,578 @@
+{
+  "hydrorepair-hair-mask": {
+    "name": "HydroRepair Hair Mask 200ml",
+    "price": "₹749",
+    "url": "https://moxiebeauty.in/products/hydrorepair-hair-mask",
+    "description": "A repair mask that gives you your hair back\nA weekly repair mask that restores your hair's ability to hold onto moisture, so it stays soft, strong, and manageable. Not just on wash day, but consistent",
+    "type": "HAIR MASK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/Website_HRHM_PDP-01.jpg?v=1778223604"
+  },
+  "hyaluronic-acid-repairing-conditioner-500ml": {
+    "name": "Hyaluronic Acid Repairing Conditioner 500ml",
+    "price": "₹1425",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-conditioner-500ml",
+    "description": "Strengthen, smooth, and hydrate - without the weight!\nThe Hyaluronic Acid Repairing Conditioner is a high-performance, protein-enriched formula that restores moisture balance, strengthens weakened str",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/6_c8e316d3-94fc-4484-a3a1-c9570a759707.jpg?v=1762445811"
+  },
+  "hyaluronic-acid-repairing-shampoo-500ml": {
+    "name": "Hyaluronic Acid Repairing Shampoo 500ml",
+    "price": "₹1059",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-shampoo-500ml",
+    "description": "Meet your hair’s hydration hero!\nThe Hyaluronic Acid Repairing Shampoo is a sulphate-free formula that gently cleanses while replenishing lost moisture and reinforcing your hair’s natural barrier. Cli",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/9.jpg?v=1762445770"
+  },
+  "scalp-treatment-serum-duo": {
+    "name": "Scalp Treatment + Serum Duo",
+    "price": "₹1049",
+    "url": "https://moxiebeauty.in/products/scalp-treatment-serum-duo",
+    "description": "Your targeted relief duo for flakes, itch, and flare-ups.\nThe Scalp Treatment + Serum Duo is your intensive care set for dandruff-prone, irritated scalps. Use the Dandruff Detox Pre-Wash Treatment to ",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.STSD.jpg?v=1762177242"
+  },
+  "scalp-essentials-trio": {
+    "name": "Scalp Essentials Trio: 3-Step Routine",
+    "price": "₹1689",
+    "url": "https://moxiebeauty.in/products/scalp-essentials-trio",
+    "description": "Your 3-step routine for flake-free, balanced scalp care.\nThe Scalp Essentials Trio is a complete scalp reset — starting with our exfoliating Dandruff Detox Pre-Wash Treatment, followed by the Scalp Re",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.SET.jpg?v=1762177173"
+  },
+  "scalp-sos-wash-duo": {
+    "name": "ScalpSOS Wash Duo (Shampoo + Conditioner)",
+    "price": "₹1095",
+    "url": "https://moxiebeauty.in/products/scalp-sos-wash-duo",
+    "description": "Your essential duo for dandruff relief & scalp comfort.\nThe Scalp SOS Wash Duo combines our sulphate-free Scalp Reviving Shampoo and Moisture Restoring Conditioner for a complete cleanse-and-condition",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.SOSWD.jpg?v=1762177087"
+  },
+  "the-scalp-sos-routine": {
+    "name": "The ScalpSOS 4-Step Routine",
+    "price": "₹1995",
+    "url": "https://moxiebeauty.in/products/the-scalp-sos-routine",
+    "description": "Your SOS routine for scalp relief.\nThe Scalp SOS Routine is your complete 4-step solution for dandruff-prone, irritated scalps. Start with the Dandruff Detox Pre-Wash Treatment to exfoliate flakes, un",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.SOSR.jpg?v=1762177001"
+  },
+  "daily-calming-leave-on-serum": {
+    "name": "Daily Calming Leave On Serum 30ml",
+    "price": "₹495",
+    "url": "https://moxiebeauty.in/products/daily-calming-leave-on-serum",
+    "description": "Relief that lasts, care that protects.\nThe Daily Calming Leave-On Serum is a lightweight, non-sticky scalp serum designed to soothe, strengthen, and support your scalp — anytime, anywhere. Powered by ",
+    "type": "Serum",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.DCLOS.jpg?v=1762175309"
+  },
+  "moisture-restoring-conditioner": {
+    "name": "Moisture Restoring Conditioner 175ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/moisture-restoring-conditioner",
+    "description": "Meet your hair’s comfort coat.\nThe Moisture Restoring Conditioner is a nourishing, silicone‑free formula designed to hydrate and soften dry, stressed strands — without heaviness or buildup. Powered by",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.MRC.jpg?v=1762175214"
+  },
+  "scalp-reviving-shampoo": {
+    "name": "Scalp Reviving Shampoo 200ml",
+    "price": "₹525",
+    "url": "https://moxiebeauty.in/products/scalp-reviving-shampoo",
+    "description": "Meet your scalp’s reset button!\nThe Scalp Reviving Shampoo is a sulphate-free formula clinically designed to treat dandruff at the root — not just wash away flakes. Powered by Piroctone Olamine, AHA‑B",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.SRS.jpg?v=1762175175"
+  },
+  "dandruff-detox-pre-wash-treatment": {
+    "name": "Dandruff Detox Pre-Wash Treatment 100ml",
+    "price": "₹565",
+    "url": "https://moxiebeauty.in/products/dandruff-detox-pre-wash-treatment",
+    "description": "Hit reset on your scalp.\nThe Dandruff Detox Pre-Wash Treatment is a lightweight bi-phase serum designed to exfoliate buildup, loosen flakes, and rebalance the scalp — before you shampoo. Powered by a ",
+    "type": "Serum",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1.DDPWT.jpg?v=1762175015"
+  },
+  "deep-dive-hair-mask": {
+    "name": "Deep Dive Hair Mask 200ml",
+    "price": "₹749",
+    "url": "https://moxiebeauty.in/products/deep-dive-hair-mask",
+    "description": "Just thicc enough for your softest, most hydrated hair ever\nThis buttery deep-conditioning mask doesn’t just feel indulgent, it delivers.\nGet up to 50% smoother, softer, shinier hair* in just 3 uses. ",
+    "type": "HAIR MASK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/FOP_3.jpg?v=1756994072"
+  },
+  "hyaluronic-acid-repairing-conditioner-15ml": {
+    "name": "Hyaluronic Acid Repairing Conditioner, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-conditioner-15ml",
+    "description": "Strengthen, smooth, and hydrate - without the weight!\nThe Hyaluronic Acid Repairing Conditioner is a high-performance, protein-enriched formula that restores moisture balance, strengthens weakened str",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HARC15FOP.png?v=1753086613"
+  },
+  "hyaluronic-acid-repairing-shampoo-15ml": {
+    "name": "Hyaluronic Acid Repairing Shampoo, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-shampoo-15ml",
+    "description": "Meet your hair’s hydration hero!\nThe Hyaluronic Acid Repairing Shampoo is a sulphate-free formula that gently cleanses while replenishing lost moisture and reinforcing your hair’s natural barrier. Cli",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HAR15FOP.png?v=1753086602"
+  },
+  "ultra-hydrating-conditioner-500ml": {
+    "name": "Ultra Hydrating Conditioner 500ml",
+    "price": "₹1495",
+    "url": "https://moxiebeauty.in/products/ultra-hydrating-conditioner-500ml",
+    "description": "More richness. More of your deep hydration hero.\n\nOur Ultra Hydrating Conditioner now comes in a 500ml size - loaded with nourishing butters to deeply moisturise and restore. Its rich, luxurious textu",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/UHC500.webp?v=1750266555"
+  },
+  "super-defining-curl-cream-500ml": {
+    "name": "Super Defining Curl Cream 500ml",
+    "price": "₹2195",
+    "url": "https://moxiebeauty.in/products/super-defining-curl-cream-500ml",
+    "description": "More definition. More moisture. More of what your curls crave.\nThe Super Defining Curl Cream now comes in a 500ml size, packed with even more of the rich oils and butters your curls love. It deeply no",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/curl-cream-for-wavy-hair.webp?v=1773732172"
+  },
+  "weightless-leave-in-conditioner-500ml": {
+    "name": "Weightless Leave-In Conditioner 500ml (For Wavy Hair)",
+    "price": "₹2195",
+    "url": "https://moxiebeauty.in/products/weightless-leave-in-conditioner-500ml",
+    "description": "Bigger bottle. Same weightless wonder.\nOur bestselling Leave-In Conditioner now comes in a 500ml size. Perfect for those who love lasting hydration without the heaviness. This ultra-light, non-greasy ",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/hair-leave-in-conditioner.webp?v=1773731940"
+  },
+  "flexi-styling-serum-gel-120ml-copy": {
+    "name": "Flexi Styling Serum Gel 500ml",
+    "price": "₹2195",
+    "url": "https://moxiebeauty.in/products/flexi-styling-serum-gel-120ml-copy",
+    "description": "More of the good stuff because your hair deserve it.\nThe Flexi Styling Serum Gel now comes in a generous 500ml size, giving you more of our all-natural, serum-light formula that styles without comprom",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/best-gel-for-curly-hair.webp?v=1773731966"
+  },
+  "gentle-cleansing-shampoo-rinse-refill-repeat": {
+    "name": "Rinse. Refill. Repeat. Shampoo + Refill Pouch (500ml + 200ml)",
+    "price": "₹1495",
+    "url": "https://moxiebeauty.in/products/gentle-cleansing-shampoo-rinse-refill-repeat",
+    "description": "Rinse. Refill. Repeat. For you and the planet.\nDouble up on care with our Gentle Cleansing Shampoo and its refill pack. This sulphate-free duo delivers the same deep-cleansing, strand-hydrating magic ",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/R3OGSRP_4d379cf2-cf06-403c-b81c-cb951529e862.jpg?v=1750239697"
+  },
+  "gentle-cleansing-shampoo-500ml": {
+    "name": "Gentle Cleansing Shampoo Refill Pack 500ml",
+    "price": "₹1059",
+    "url": "https://moxiebeauty.in/products/gentle-cleansing-shampoo-500ml",
+    "description": "Bigger. Better. Kinder to your hair and the planet.\nThe OG Shampoo Refill Pack brings you more of what you love. Our sulphate-free Gentle Cleansing Shampoo in a larger, refillable format. Enjoy the sa",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/GCS500DS-1.webp?v=1750346714"
+  },
+  "hydrorepair-travel-wash-duo": {
+    "name": "HydroRepair Wash Duo (Shampoo + Conditioner): Travel Size",
+    "price": "₹749",
+    "url": "https://moxiebeauty.in/products/hydrorepair-travel-wash-duo",
+    "description": "Your hydration and repair dream team—now travel-sized!\nThe HydroRepair Travel Wash Duo brings you our sulphate-free, moisture-locking shampoo and protein-enriched conditioner in a compact, on-the-go s",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HRTWD1.jpg?v=1743406390"
+  },
+  "the-hydrorepair-routine": {
+    "name": "The HydroRepair Routine (3 Steps for Damage Repair)",
+    "price": "₹1775",
+    "url": "https://moxiebeauty.in/products/the-hydrorepair-routine",
+    "description": "The ultimate trio for stronger, healthier, and deeply hydrated hair!\nThe HydroRepair Essentials Trio is your all-in-one routine for cleansing, strengthening, and protecting your strands. Start with ou",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/THRR_1.webp?v=1747295174"
+  },
+  "hydrorepair-wash-duo": {
+    "name": "HydroRepair Wash Duo (Shampoo + Conditioner)",
+    "price": "₹1095",
+    "url": "https://moxiebeauty.in/products/hydrorepair-wash-duo",
+    "description": "Meet your hydration and repair dream team!\nThe HydroRepair Wash Duo pairs our sulphate-free, moisture-locking shampoo with a high-performance, protein-enriched conditioner to cleanse, strengthen, and ",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/PHOTO-2025-06-19-12-22-52.jpg?v=1750316153"
+  },
+  "hyaluronic-acid-hair-serum": {
+    "name": "Hyaluronic Acid Hair Serum 50ml",
+    "price": "₹595",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-hair-serum",
+    "description": "Repair, hydrate, and shield—your hair’s daily defence!\nThe Hyaluronic Acid Hair Serum is a deeply reparative leave-in that hydrates, smooths, and protects against heat and environmental stressors. Pow",
+    "type": "Serum",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HAHS_1.webp?v=1747295015"
+  },
+  "hyaluronic-acid-repairing-conditioner": {
+    "name": "Hyaluronic Acid Repairing Conditioner 175ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-conditioner",
+    "description": "Strengthen, smooth, and hydrate - without the weight!\nThe Hyaluronic Acid Repairing Conditioner is a high-performance, protein-enriched formula that restores moisture balance, strengthens weakened str",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HARC_1.webp?v=1747294945"
+  },
+  "hyaluronic-acid-repairing-shampoo": {
+    "name": "Hyaluronic Acid Repairing Shampoo 200ml",
+    "price": "₹525",
+    "url": "https://moxiebeauty.in/products/hyaluronic-acid-repairing-shampoo",
+    "description": "Meet your hair’s hydration hero!\nThe Hyaluronic Acid Repairing Shampoo is a sulphate-free formula that gently cleanses while replenishing lost moisture and reinforcing your hair’s natural barrier. Cli",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/HARS_1.webp?v=1747294851"
+  },
+  "cheat-day-dry-shampoo": {
+    "name": "Cheat Day Powder Dry Shampoo",
+    "price": "₹595",
+    "url": "https://moxiebeauty.in/products/cheat-day-dry-shampoo",
+    "description": "It’s not cheating; it’s strategic hair care.  \n\nOur Cheat Day Dry Shampoo transforms greasy roots into fresh, volumised hair in seconds. This 100% plant based powder formula has no harsh alcohols or a",
+    "type": "DRY SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/1_1db3027b-361d-4f51-90e1-c3c75e0a6308.jpg?v=1750360675"
+  },
+  "dry-shampoo-and-brush-combo": {
+    "name": "Cheat Day Dry Shampoo & Blending Brush Duo",
+    "price": "₹696",
+    "url": "https://moxiebeauty.in/products/dry-shampoo-and-brush-combo",
+    "description": "Fresh hair, no wash required. This duo keeps grease in check and volume on point\nCheat Day Dry Shampoo revives greasy roots, adds instant volume, and extends time between washes. No chalky residue, no",
+    "type": "DRY SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/CDBD_1.jpg?v=1740160011"
+  },
+  "hold-my-sparkle-hair-glitter-duo": {
+    "name": "Hold My Sparkle Duo: Hair Glitter & Styling Gel",
+    "price": "₹649",
+    "url": "https://moxiebeauty.in/products/hold-my-sparkle-hair-glitter-duo",
+    "description": "Your hair deserves to shine—literally. \nThe Hold My Sparkle Duo combines the lightweight, frizz-fighting hold of our Flexi Styling Serum Gel with the radiant shimmer of Cosmic Dust Hair Glitter.\nMix t",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/hms0.jpg?v=1737448616"
+  },
+  "the-headliner-and-finisher-duo": {
+    "name": "The Headliner and Finisher Duo - Hair Wax Stick & Brush",
+    "price": "₹849",
+    "url": "https://moxiebeauty.in/products/the-headliner-and-finisher-duo",
+    "description": "Ready to steal the show? \nThis is the perfect pair for sleek, celeb-style slick-backs: The Headliner Hair Wax Stick lays down the shine, the soft-bristled Hair Finisher Brush keeps it in line. Togethe",
+    "type": "HAIR WAX STICK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE00000050_1.jpg?v=1750361709"
+  },
+  "the-headliner": {
+    "name": "The Headliner Hair Wax Stick 30g",
+    "price": "₹689",
+    "url": "https://moxiebeauty.in/products/the-headliner",
+    "description": "Ready to steal the show? \nThe Headliner is your go-to hair wax stick for sleek, shiny styles with all-day hold. Whether it’s a slick bun or a polished pony, The Headliner glides on, effortlessly smoot",
+    "type": "HAIR WAX STICK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/11_n2_2.jpg?v=1734515017"
+  },
+  "firefighter-heat-protection-spray": {
+    "name": "Firefighter Heat Protection Spray 100ml",
+    "price": "₹599",
+    "url": "https://moxiebeauty.in/products/firefighter-heat-protection-spray",
+    "description": "Meet your hair’s first line of defence! \nThe all-new Firefighter Heat Protection Spray shields your strands from heat damage up to 450°F. A few pumps of this oil-based formula will protect your hair f",
+    "type": "HEAT PROTECTION SPRAY",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/5_n2_1.jpg?v=1734509225"
+  },
+  "ditch-the-frizz-trio": {
+    "name": "Ditch The Frizz Trio (3 Steps for Frizzy Hair)",
+    "price": "₹1725",
+    "url": "https://moxiebeauty.in/products/ditch-the-frizz-trio",
+    "description": "Give yourself the gift of great hair days with our Ditch-The-Frizz Trio!\nThis essential collection is your key to soft, manageable hair. You'll find our Gentle Cleansing Shampoo to refresh your scalp,",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEMAY_095_N_31_IMGCentury.jpg?v=1734509201"
+  },
+  "frizz-fighting-hair-serum": {
+    "name": "Frizz Fighting Hair Serum (SPF 35) 50ml",
+    "price": "₹559",
+    "url": "https://moxiebeauty.in/products/frizz-fighting-hair-serum",
+    "description": "A one-of-a-kind, milky formula that's both moisturiser and suncreen for your hair!\n\nDiscover frizz-free, soft, sun-protected hair with our serum that tackles the root cause of dryness and frizz. Unlik",
+    "type": "Serum",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/FFHS.jpg?v=1734962525"
+  },
+  "copy-of-travel-pouch": {
+    "name": "Travel Pouch",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/copy-of-travel-pouch",
+    "description": "Big on travelling and organising? It doesn't get better than our Moxie Travel Pouch which is designed to carry all your Moxie goodies on-the-go! Whether it's vacay must-haves or everyday essentials, d",
+    "type": "Accessories",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/FOP.jpg?v=1776172500"
+  },
+  "flexi-styling-serum-gel-sampler": {
+    "name": "Flexi Styling Serum Gel, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/flexi-styling-serum-gel-sampler",
+    "description": "Introducing the ultimate styling serum gel, delivering the pinnacle of frizz control, definition, and breathable hold.",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEDAY3-301.jpg?v=1703595311"
+  },
+  "super-defining-curl-cream-sampler": {
+    "name": "Super Defining Curl Cream, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/super-defining-curl-cream-sampler",
+    "description": "Achieve perfectly shaped curls with our moisture-charged cream. Defining patterns, defeating frizz – it's your go-to for coarse, dry hair.",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEDAY3-286.jpg?v=1703595290"
+  },
+  "ultra-hydrating-conditioner-sampler": {
+    "name": "Ultra Hydrating Conditioner, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/ultra-hydrating-conditioner-sampler",
+    "description": "A deep hydrating conditioner that tackles dryness, damage and breakage, for hair that's healthy, strong and full of Moxie!",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEDAY3-298.jpg?v=1703595240"
+  },
+  "weightless-leave-in-conditioner-sampler": {
+    "name": "Weightless Leave In Conditioner, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/weightless-leave-in-conditioner-sampler",
+    "description": "A weightless leave-in conditioner that ensures moisture, elevated curl and wave definition, and controls frizz. The non-greasy blend is ideal for hair with low porosity, containing a high dose of Moxi",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEDAY3-287.jpg?v=1703595266"
+  },
+  "gentle-cleansing-shampoo-sampler": {
+    "name": "Gentle Cleansing Shampoo, 10ml",
+    "price": "₹0",
+    "url": "https://moxiebeauty.in/products/gentle-cleansing-shampoo-sampler",
+    "description": "A gentle, deep cleansing shampoo for the scalp that hydrates your hair and revitalises the strands.",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIEDAY3-296.jpg?v=1703595205"
+  },
+  "rinse-shine-travel-duo": {
+    "name": "Rinse & Shine Travel Duo (Shampoo + Conditioner)",
+    "price": "₹489",
+    "url": "https://moxiebeauty.in/products/rinse-shine-travel-duo",
+    "description": "Give your hair and scalp some TLC with this legendary duo. Our gentle cleansing shampoo and rich, mask-like conditioner work together to rejuvenate your scalp, hydrate and strengthen your strands, and",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/travel-shampoo-conditioner.jpg?v=1773728937"
+  },
+  "on-the-fly-hair-finishing-stick-pack-of-2": {
+    "name": "On-The-Fly Hair Finishing Stick (Pack of 2)",
+    "price": "₹899",
+    "url": "https://moxiebeauty.in/products/on-the-fly-hair-finishing-stick-pack-of-2",
+    "description": "Bingo! You just unlocked the easiest remedy to control those baby flyaway hairs and stray ends with the Moxie Beauty On The Fly Hair Finishing Stick. The best part? All natural ingredients, and no sti",
+    "type": "HAIR FINISHING STICK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/OTF20_FOP.jpg?v=1740980736"
+  },
+  "super-defining-curl-cream-travel-size": {
+    "name": "Super Defining Curl Cream, 50ml",
+    "price": "₹295",
+    "url": "https://moxiebeauty.in/products/super-defining-curl-cream-travel-size",
+    "description": "Discover curls like never before with our Super Defining Curl Cream. Packed with nourishing oils and butters, it deeply moisturises the strands, boosts curl pattern, and minimises frizz. A must-have, ",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_062_N_13.jpg?v=1734514986"
+  },
+  "moxie-curly-sampler-set": {
+    "name": "The Moxie Curly Routine (Sampler Set)",
+    "price": "₹300",
+    "url": "https://moxiebeauty.in/products/moxie-curly-sampler-set",
+    "description": "The perfect curls don't exis-With The Moxie Curly Routine in your corner, consisting of a scalp-loving shampoo, a rich conditioner that's like a hug for your hair, a luxe curl defining cream, and styl",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_SAMPLE_KIT_1_N_26.jpg?v=1734515171"
+  },
+  "moxie-wavy-sampler-set": {
+    "name": "The Moxie Wavy Routine (Sampler Set)",
+    "price": "₹300",
+    "url": "https://moxiebeauty.in/products/moxie-wavy-sampler-set",
+    "description": "Bad hair days, who?Trust our gentle shampoo to cleanse your scalp, and our conditioner to deeply hydrate the strands, while the leave-in conditioner seals in moisture and enhances your waves. Top it o",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_SAMPLE_KIT_2_N_27.jpg?v=1734515445"
+  },
+  "weightless-leave-in-conditioner-travel-size": {
+    "name": "Weightless Leave In Conditioner, 50ml",
+    "price": "₹295",
+    "url": "https://moxiebeauty.in/products/weightless-leave-in-conditioner-travel-size",
+    "description": "Pamper your hair with our lightweight leave-in conditioner. Crafted for enduring moisture, frizz control, and enhanced wave/curl definition, its featherlight, non-greasy composition promises soft, vol",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_230_N_17.jpg?v=1734515943"
+  },
+  "ultra-hydrating-conditioner-travel-size": {
+    "name": "Ultra Hydrating Conditioner, 50ml",
+    "price": "₹295",
+    "url": "https://moxiebeauty.in/products/ultra-hydrating-conditioner-travel-size",
+    "description": "Experience ultimate hydration and restoration with our conditioner, enriched with a blend of moisturising butters. Its rich, opulent texture offers utmost nourishment, combating dryness, damage, and b",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_172_N_16.jpg?v=1734515543"
+  },
+  "flexi-styling-serum-gel-travel-size": {
+    "name": "Flexi Styling Serum Gel, 50ml",
+    "price": "₹295",
+    "url": "https://moxiebeauty.in/products/flexi-styling-serum-gel-travel-size",
+    "description": "Styling just got better with our revolutionary, all-natural styling gel. This weightless serum-like gel seals in moisture, fights frizz, and provides lasting hold for your waves/curls with zero sticky",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_272_N_18.jpg?v=1734509285"
+  },
+  "gentle-cleansing-shampoo-travel-size": {
+    "name": "Gentle Cleansing Shampoo, 50ml",
+    "price": "₹265",
+    "url": "https://moxiebeauty.in/products/gentle-cleansing-shampoo-travel-size",
+    "description": "One-wash miracles come true with our sulphate-free, Gentle Cleansing Shampoo. It deeply cleanses your scalp and hydrates the strands in one luxurious formula, so you can say hello to hair that feels f",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_145_N_15.jpg?v=1734509387"
+  },
+  "travel-pouch": {
+    "name": "The Moxie Travel Pouch",
+    "price": "₹500",
+    "url": "https://moxiebeauty.in/products/travel-pouch",
+    "description": "Big on travelling and organising? It doesn't get better than our Moxie Travel Pouch which is designed to carry all your Moxie goodies on-the-go! Whether it's vacay must-haves or everyday essentials, d",
+    "type": "Accessories",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/FOP.jpg?v=1776172500"
+  },
+  "hair-scalp-massager": {
+    "name": "Scalp Massager",
+    "price": "₹175",
+    "url": "https://moxiebeauty.in/products/hair-scalp-massager",
+    "description": "Add a pop of neon fun to your shower routine with our Scalp Massager! It's your daily dose of scalp stimulation as you lather and massage to boost circulation and hair growth.",
+    "type": "Accessories",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/Yellow_Hair_Scalp_Massager.jpg?v=1724404966"
+  },
+  "curly-vibe-setter-travel-duo": {
+    "name": "Curly Vibe Setter Duo (Cream + Gel): Travel Size",
+    "price": "₹559",
+    "url": "https://moxiebeauty.in/products/curly-vibe-setter-travel-duo",
+    "description": "The ultimate styling duo - our Super Defining Curl Cream delivers deep moisture and boosts curl definition, while our Flexi Styling Serum Gel ensures frizz control and weightless hold, giving you soft",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/MOXIE_DAY_3_348_N_19.jpg?v=1734509176"
+  },
+  "curly-vibe-setter-duo": {
+    "name": "Curly Vibe Setter Duo (Cream + Gel)",
+    "price": "₹1149",
+    "url": "https://moxiebeauty.in/products/curly-vibe-setter-duo",
+    "description": "The ultimate styling duo - our Super Defining Curl Cream delivers deep moisture and boosts curl definition, while our Flexi Styling Serum Gel ensures frizz control and weightless hold, giving you soft",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/curly-hair-styling-duo.jpg?v=1773732019"
+  },
+  "wavy-vibe-setter-travel-duo": {
+    "name": "Wavy Vibe Setter Duo (Leave-In + Gel): Travel Size",
+    "price": "₹559",
+    "url": "https://moxiebeauty.in/products/wavy-vibe-setter-travel-duo",
+    "description": "It's time to break up with dryness and frizz!Our weightless leave-in conditioner locks in moisture and defines your waves, and our styling serum gel ensures frizz control and hold, for soft bouncy wav",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/curly-hair-cream-and-gel.jpg?v=1773731349"
+  },
+  "wavy-vibe-setter-duo": {
+    "name": "Wavy Vibe Setter Duo for Wavy Hair (Leave-In + Gel)",
+    "price": "₹1149",
+    "url": "https://moxiebeauty.in/products/wavy-vibe-setter-duo",
+    "description": "It's time to break up with dryness and frizz!Our weightless leave-in conditioner locks in moisture and defines your waves, and our styling serum gel ensures frizz control and hold, for soft bouncy wav",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/wavy-hair-routine-products.jpg?v=1773731186"
+  },
+  "rinse-shine-duo": {
+    "name": "Rinse & Shine Duo (Shampoo+Conditioner)",
+    "price": "₹1095",
+    "url": "https://moxiebeauty.in/products/rinse-shine-duo",
+    "description": "Give your hair and scalp some TLC with this legendary duo. Our gentle cleansing shampoo and rich, mask-like conditioner work together to rejuvenate your scalp, hydrate and strengthen your strands, and",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/moxie-shampoo-conditioner-duo.jpg?v=1773731369"
+  },
+  "power-champi-routine": {
+    "name": "The Power Champi Routine (Oil + Wash Duo)",
+    "price": "₹1795",
+    "url": "https://moxiebeauty.in/products/power-champi-routine",
+    "description": "Your complete crown ritual, in three steps.\nA modern reinvention of the champi that delivers strength, shine, and resilience without the stickiness. Powered by Oil Mighty, our strengthening hair oil, ",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/Bundle_Oilmighty_cropped_1.jpg?v=1759230721"
+  },
+  "curly-essentials-travel-trio": {
+    "name": "Curly Essential Trio (3 Steps for Indian Curly Hair): Travel Size",
+    "price": "₹795",
+    "url": "https://moxiebeauty.in/products/curly-essentials-travel-trio",
+    "description": "Get your curls popping with our simple 3-step routine! Our scalp-reviving shampoo cleanses and rejuvenates, our mask-like conditioner combats dryness and breakage, and our opulent defining cream enhan",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/travel-trio-for-curly-hair.jpg?v=1773732112"
+  },
+  "wavy-essentials-travel-trio": {
+    "name": "Wavy Essentials Trio (3 Steps for Wavy Hair): Travel Size",
+    "price": "₹795",
+    "url": "https://moxiebeauty.in/products/wavy-essentials-travel-trio",
+    "description": "Elevate your waves with our simple 3-step routine. It comes with a scalp-reviving shampoo, a deep conditioner to hydrate and strengthen, and a weightless leave-in conditioner that moisturises and figh",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/wavy-hair-products-mini.jpg?v=1773731404"
+  },
+  "the-moxie-curly-travel-routine": {
+    "name": "The Moxie Curly Routine (4 Steps for Indian Curly Hair): Travel Size",
+    "price": "₹1049",
+    "url": "https://moxiebeauty.in/products/the-moxie-curly-travel-routine",
+    "description": "The perfect curls don't exis-With The Moxie Curly Routine in your corner, consisting of a scalp-loving shampoo, a rich conditioner that's like a hug for your hair, a luxe curl defining cream, and styl",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/moxie-curly-routine-travel-size.jpg?v=1773732133"
+  },
+  "the-moxie-wavy-travel-routine": {
+    "name": "The Moxie Wavy Routine (4 Steps for Wavy Hair): Travel Size",
+    "price": "₹1049",
+    "url": "https://moxiebeauty.in/products/the-moxie-wavy-travel-routine",
+    "description": "Bad hair days, who?Trust our gentle shampoo to cleanse your scalp, and our conditioner to deeply hydrate the strands, while the leave-in conditioner seals in moisture and enhances your waves. Top it o",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/wavy-travel-routine-set.jpg?v=1773731429"
+  },
+  "gentle-cleansing-shampoo": {
+    "name": "Gentle Cleansing Shampoo 200ml",
+    "price": "₹525",
+    "url": "https://moxiebeauty.in/products/gentle-cleansing-shampoo",
+    "description": "One-wash miracles come true with our sulphate-free, Gentle Cleansing Shampoo. It deeply cleanses your scalp and hydrates the strands in one luxurious formula, so you can say hello to hair that feels f",
+    "type": "SHAMPOO",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/moxie-clarifying-shampoo.jpg?v=1773731451"
+  },
+  "ultra-hydrating-conditioner": {
+    "name": "Ultra Hydrating Conditioner 175ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/ultra-hydrating-conditioner",
+    "description": "Experience ultimate hydration and restoration with our conditioner, enriched with a blend of moisturising butters. Its rich, opulent texture offers utmost nourishment, combating dryness, damage, and b",
+    "type": "CONDITIONER",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/conditioner-for-curly-hair.jpg?v=1773731907"
+  },
+  "weightless-leave-in-conditioner": {
+    "name": "Weightless Leave-In Conditioner 120ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/weightless-leave-in-conditioner",
+    "description": "Pamper your hair with our lightweight leave-in conditioner. Crafted for enduring moisture, frizz control, and enhanced wave/curl definition, its featherlight, non-greasy composition promises soft, vol",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/leave-in-hair-treatment.jpg?v=1773731226"
+  },
+  "super-defining-curl-cream": {
+    "name": "Super Defining Curl Cream 120ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/super-defining-curl-cream",
+    "description": "Discover curls like never before with our Super Defining Curl Cream. Packed with nourishing oils and butters, it deeply moisturises the strands, boosts curl pattern, and minimises frizz. A must-have, ",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/light-curl-cream.jpg?v=1773732053"
+  },
+  "cocoa-hemp-almond-hair-oil": {
+    "name": "Oil Mighty Strengthening Hair Oil 100ml",
+    "price": "₹695",
+    "url": "https://moxiebeauty.in/products/cocoa-hemp-almond-hair-oil",
+    "description": "Strong hair is your crown. Oil Mighty is how you wear it.\nThis lightweight, high-performance blend strengthens every strand without stickiness or heaviness. Powered by cocoa, almond, and avocado oils,",
+    "type": "HAIR OIL",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/D2C_OM_Hero_Image.jpg?v=1758887068"
+  },
+  "just-the-essentials-curly-trio": {
+    "name": "Just-The-Essentials Curly Trio (3-Step Routine)",
+    "price": "₹1725",
+    "url": "https://moxiebeauty.in/products/just-the-essentials-curly-trio",
+    "description": "Get your curls popping with our simple 3-step routine! Our scalp-reviving shampoo cleanses and rejuvenates, our mask-like conditioner combats dryness and breakage, and our opulent defining cream enhan",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/essentials-for-curly-hair.jpg?v=1773732084"
+  },
+  "on-the-fly-hair-finishing-stick": {
+    "name": "On-The-Fly Hair Finishing Stick for Baby Hair & Flyaways",
+    "price": "₹495",
+    "url": "https://moxiebeauty.in/products/on-the-fly-hair-finishing-stick",
+    "description": "Bingo! You just unlocked the easiest remedy to control those baby flyaway hairs and stray ends with the Moxie On The Fly - Hair Finishing Stick. The best part? All natural ingredients, and no sticky o",
+    "type": "HAIR FINISHING STICK",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/OTF10_FOP.jpg?v=1740980783"
+  },
+  "just-the-essentials-wavy-trio": {
+    "name": "Just-The-Essentials Wavy Trio (3-Step Routine)",
+    "price": "₹1725",
+    "url": "https://moxiebeauty.in/products/just-the-essentials-wavy-trio",
+    "description": "Elevate your waves with our simple 3-step routine. It comes with a scalp-reviving shampoo, a deep conditioner to hydrate and strengthen, and a weightless leave-in conditioner that moisturises and figh",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/moxie-just-the-essentials-wavy-trio-3-step-routine.jpg?v=1773731313"
+  },
+  "the-moxie-curly-routine": {
+    "name": "The Moxie Curly Routine (4 Steps for Indian Curly Hair)",
+    "price": "₹2295",
+    "url": "https://moxiebeauty.in/products/the-moxie-curly-routine",
+    "description": "The perfect curls don't exis-With The Moxie Curly Routine in your corner, consisting of a scalp-loving shampoo, a rich conditioner that's like a hug for your hair, a luxe curl defining cream, and styl",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/curly-hair-care-routine.jpg?v=1773731991"
+  },
+  "flexi-styling-serum-gel": {
+    "name": "Flexi Styling Serum Gel 120ml",
+    "price": "₹589",
+    "url": "https://moxiebeauty.in/products/flexi-styling-serum-gel",
+    "description": "Styling just got better with our revolutionary, all-natural styling gel. This weightless serum-like gel seals in moisture, fights frizz, and provides lasting hold for your waves/curls with zero sticky",
+    "type": "Styling",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/flexi-styling-serum-gel.jpg?v=1773731258"
+  },
+  "the-moxie-wavy-routine": {
+    "name": "The Moxie Wavy Routine (4 Steps for Wavy Hair)",
+    "price": "₹2295",
+    "url": "https://moxiebeauty.in/products/the-moxie-wavy-routine",
+    "description": "Bad hair days, who?Trust our gentle shampoo to cleanse your scalp, and our conditioner to deeply hydrate the strands, while the leave-in conditioner seals in moisture and enhances your waves. Top it o",
+    "type": "",
+    "image_src": "https://cdn.shopify.com/s/files/1/0762/7862/8674/files/moxie-wavy-routine.jpg?v=1773730298"
+  }
+}
