@@ -72,40 +72,6 @@
     }
   },
   {
-    "content": "Tutorial video: Kartik's Curly Hair Tutorial\n\nCurly hair routine demonstrated on men's curly hair. Shows the full Moxie curly routine with tips for shorter curly hair.\n\nWatch here: https://drive.google.com/file/d/1z74gnKGqpUNrCei7HLaEUt-b1VkcDfOC/view\n\nProducts featured: gentle-cleansing-shampoo, ultra-hydrating-conditioner, super-defining-curl-cream, flexi-styling-serum-gel\n\nRoutine: curly_full\n\nBest for hair types: 3a, 3b",
-    "source_type": "video_tutorial",
-    "source_url": "https://drive.google.com/file/d/1z74gnKGqpUNrCei7HLaEUt-b1VkcDfOC/view",
-    "source_id": "video_1z74gnKGqpUN",
-    "chunk_type": "video_tutorial",
-    "topic_tags": [
-      "curls",
-      "frizz",
-      "men",
-      "short_hair",
-      "routine",
-      "tutorial"
-    ],
-    "product_refs": [
-      "gentle-cleansing-shampoo",
-      "ultra-hydrating-conditioner",
-      "super-defining-curl-cream",
-      "flexi-styling-serum-gel"
-    ],
-    "hair_types": [
-      "3a",
-      "3b"
-    ],
-    "metadata": {
-      "drive_id": "1z74gnKGqpUNrCei7HLaEUt-b1VkcDfOC",
-      "drive_url": "https://drive.google.com/file/d/1z74gnKGqpUNrCei7HLaEUt-b1VkcDfOC/view",
-      "public_url": "",
-      "routines": [
-        "curly_full"
-      ],
-      "title": "Kartik's Curly Hair Tutorial"
-    }
-  },
-  {
     "content": "Tutorial video: Ditch the Frizz Trio (DTFT) Tutorial\n\nHow to use the Moxie Ditch the Frizz Trio: gentle cleansing shampoo, ultra hydrating conditioner, and frizz fighting hair serum for frizz-free smooth hair.\n\nWatch here: https://www.youtube.com/shorts/yJ2T7PMhS_M\n\nProducts featured: gentle-cleansing-shampoo, ultra-hydrating-conditioner, frizz-fighting-hair-serum\n\nRoutine: dtft\n\nBest for hair types: 1b, 1c, 2a",
     "source_type": "video_tutorial",
     "source_url": "https://www.youtube.com/shorts/yJ2T7PMhS_M",
@@ -137,37 +103,6 @@
       ],
       "title": "Ditch the Frizz Trio (DTFT) Tutorial",
       "youtube_id": "yJ2T7PMhS_M"
-    }
-  },
-  {
-    "content": "Tutorial video: HydroRepair Routine (THRR) Tutorial\n\nHow to use the Moxie HydroRepair routine for damaged, colour-treated, or heat-damaged hair: HA shampoo, HA conditioner, and HA hair serum.\n\nWatch here: https://drive.google.com/file/d/1bM1ecsanr59tlbMovw8j61K1OofDEXPH/view\n\nProducts featured: hyaluronic-acid-repairing-shampoo, hyaluronic-acid-repairing-conditioner, hyaluronic-acid-repairing-serum\n\nRoutine: hydrorepair",
-    "source_type": "video_tutorial",
-    "source_url": "https://drive.google.com/file/d/1bM1ecsanr59tlbMovw8j61K1OofDEXPH/view",
-    "source_id": "video_1bM1ecsanr59",
-    "chunk_type": "video_tutorial",
-    "topic_tags": [
-      "damage",
-      "repair",
-      "colour_treated",
-      "chemically_treated",
-      "hydration",
-      "routine",
-      "tutorial"
-    ],
-    "product_refs": [
-      "hyaluronic-acid-repairing-shampoo",
-      "hyaluronic-acid-repairing-conditioner",
-      "hyaluronic-acid-repairing-serum"
-    ],
-    "hair_types": [],
-    "metadata": {
-      "drive_id": "1bM1ecsanr59tlbMovw8j61K1OofDEXPH",
-      "drive_url": "https://drive.google.com/file/d/1bM1ecsanr59tlbMovw8j61K1OofDEXPH/view",
-      "public_url": "",
-      "routines": [
-        "hydrorepair"
-      ],
-      "title": "HydroRepair Routine (THRR) Tutorial"
     }
   },
   {
@@ -218,32 +153,6 @@
       "routines": [],
       "title": "On The Fly (OTF) Hair Finishing Stick Tutorial",
       "youtube_id": "Ex-wM4vzxew"
-    }
-  },
-  {
-    "content": "Tutorial video: Headliner Wax Stick (HWS) Tutorial\n\nHow to use the Moxie Headliner Hair Wax Stick with the finishing brush for sleek looks, edge control, and strong hold styling on dry hair.\n\nWatch here: https://drive.google.com/file/d/1QPu_v0EVa1V6JTbSruinIXkTkF3TQAjb/view\n\nProducts featured: headliner-hair-wax-stick, hair-finishing-brush",
-    "source_type": "video_tutorial",
-    "source_url": "https://drive.google.com/file/d/1QPu_v0EVa1V6JTbSruinIXkTkF3TQAjb/view",
-    "source_id": "video_1QPu_v0EVa1V",
-    "chunk_type": "video_tutorial",
-    "topic_tags": [
-      "styling",
-      "sleek",
-      "hold",
-      "edge_control",
-      "tutorial"
-    ],
-    "product_refs": [
-      "headliner-hair-wax-stick",
-      "hair-finishing-brush"
-    ],
-    "hair_types": [],
-    "metadata": {
-      "drive_id": "1QPu_v0EVa1V6JTbSruinIXkTkF3TQAjb",
-      "drive_url": "https://drive.google.com/file/d/1QPu_v0EVa1V6JTbSruinIXkTkF3TQAjb/view",
-      "public_url": "",
-      "routines": [],
-      "title": "Headliner Wax Stick (HWS) Tutorial"
     }
   },
   {

@@ -62,6 +62,23 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 CREATE INDEX IF NOT EXISTS messages_conv_idx ON messages (conversation_id, created_at);
 
+-- Kiosk sessions (brand events)
+CREATE TABLE IF NOT EXISTS kiosk_sessions (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_name      TEXT NOT NULL DEFAULT 'flipkart_jun2026',
+  user_name       TEXT NOT NULL,
+  phone           TEXT NOT NULL,
+  hair_type       TEXT,
+  hair_analysis   JSONB,
+  primary_concern TEXT,
+  routine_name    TEXT,
+  routine_steps   JSONB,
+  sampler_given   BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_kiosk_phone ON kiosk_sessions (phone);
+CREATE INDEX IF NOT EXISTS idx_kiosk_event ON kiosk_sessions (event_name);
+
 -- Feedback
 CREATE TABLE IF NOT EXISTS message_feedback (
   message_id      BIGINT REFERENCES messages(id),

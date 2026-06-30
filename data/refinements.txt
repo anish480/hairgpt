@@ -1,0 +1,16 @@
+Text Content Feedback:
+	1. The text is very verbose at the moment. I think the same message / idea can be communicated with 50% of the words in most cases. Hence, reduce the word count per message without diluting the meaning
+	2. I have added brand level text/copy guidelines in the 'data' folder, the file is called "brand_guidelines.md". Please use this file to make the text brand aligned
+	3. The AI response inherently assumes a female in the conversation, which is politically incorrect. If an image is uploaded, use it to understand the gender, if we don't know the gender, let's use gender neutral terms.
+	4. We still maintain that the bot is an educative agent which also knows about Moxie's products. The goal is to educate the customer about everything hair and give them the right information relevant in selecting a hair-care routine/strategy
+
+Conversation Feedback:
+	1. The options now generated are better, the conversation is smoother, however, the text box in the UI still tends to disappear in some cases, after a video tutorial is shared for example. I would like the disappearance to never happen.
+	2. Since this is a chat bot hosted on our website, with 90% of the traffic coming from mobile devices, a single answer cannot be longer than one content fold. The word count needs to come down. Be concise, but not robotic.
+	3. The Camera icon is an emoji right now. I'd rather have a svg/flaticon/wireframe. Swap this
+
+UI/UX Side Improvements:
+	1. The Human and bot logos have to go entirely. Make it conversational by showing user sent messages as bubbles on the right, AI responses on the left. When AI is generating a response, show it as a small typing bubble on the left
+	2. In the current render, the tool is called HairGPT, please rename this to MoxieBuddy.
+	3. Generate a gender neutral avatar for the MoxieBuddy, make sure it has a squarish face with curly hair (medium length).
+	4. Remove the subtext "by Moxie Beauty — Your AI Hair Consultant." This field is not needed.

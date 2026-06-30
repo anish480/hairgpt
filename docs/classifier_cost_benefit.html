@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hair Classifier &mdash; Cost-Benefit Analysis: LLM vs Custom ML</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --accent-llm: #0d6efd;
+    --accent-ml: #198754;
+    --warn: #fd7e14;
+    --danger: #dc3545;
+    --code-bg: #f1f3f5;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem 1rem; font-family: var(--font);
+    background: var(--bg); color: #212529; line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+  .subtitle { color: #6c757d; font-size: 1rem; margin-bottom: 2.5rem; }
+  h2 {
+    font-size: 1.4rem; margin: 2.5rem 0 0.75rem; padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+
+  /* Cards */
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem 2rem; margin: 1rem 0;
+  }
+  .card.llm  { border-left: 5px solid var(--accent-llm); }
+  .card.ml   { border-left: 5px solid var(--accent-ml); }
+  .card.warn { border-left: 5px solid var(--warn); }
+  .card.rec  { border-left: 5px solid var(--accent-ml); background: #f0fdf4; }
+
+  .badge {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; padding: 0.2rem 0.6rem;
+    border-radius: 4px; color: #fff; margin-bottom: 0.5rem;
+  }
+  .badge.llm { background: var(--accent-llm); }
+  .badge.ml  { background: var(--accent-ml); }
+  .badge.warn { background: var(--warn); }
+  .badge.rec { background: var(--accent-ml); }
+
+  /* Tables */
+  table {
+    width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem;
+  }
+  th, td {
+    text-align: left; padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  th { background: var(--code-bg); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Comparison grid */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  /* Pros/Cons lists */
+  .pro-con-list { list-style: none; padding: 0; margin: 0.5rem 0; }
+  .pro-con-list li { padding: 0.3rem 0; font-size: 0.9rem; }
+  .pro-con-list li::before { margin-right: 0.5rem; font-weight: 700; }
+  .pros li::before { content: "+"; color: var(--accent-ml); }
+  .cons li::before { content: "-"; color: var(--danger); }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em; background: var(--code-bg); padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+  .data-box {
+    background: var(--code-bg); border-radius: 6px; padding: 0.75rem 1rem;
+    font-size: 0.82rem; overflow-x: auto; margin: 0.5rem 0;
+    font-family: "SFMono-Regular", Consolas, monospace; white-space: pre-wrap;
+  }
+
+  .highlight { background: #fff3cd; padding: 0.15rem 0.35rem; border-radius: 3px; }
+  .cost-big { font-size: 1.8rem; font-weight: 700; margin: 0.25rem 0; }
+  .cost-unit { font-size: 0.85rem; color: #6c757d; }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem; margin: 1rem 0;
+  }
+  .metric-box {
+    background: var(--code-bg); border-radius: 8px; padding: 0.75rem;
+    text-align: center;
+  }
+  .metric-box .label { font-size: 0.72rem; text-transform: uppercase; color: #6c757d; letter-spacing: 0.04em; }
+  .metric-box .value { font-size: 1.3rem; font-weight: 700; margin: 0.2rem 0; }
+  .metric-box .detail { font-size: 0.75rem; color: #6c757d; }
+
+  .sources { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: #6c757d; }
+  .sources a { color: #6c757d; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Hair Classifier &mdash; Cost-Benefit Analysis</h1>
+<p class="subtitle">Gemini 2.5 Flash (LLM multimodal) vs. Custom ML vision model for hair attribute classification in MoxieBuddy.</p>
+
+<!-- ============================================================ -->
+<h2>1. Current Implementation</h2>
+<!-- ============================================================ -->
+
+<div class="card llm">
+  <span class="badge llm">Current: LLM-Based Classifier</span>
+  <p>The current classifier uses <strong>Gemini 2.5 Flash</strong> via Vertex AI to analyze hair photos. A single API call sends the image + text prompt and receives structured JSON output.</p>
+
+  <div class="data-box">File: backend/app/llm.py  ->  classify_hair_photo()
+
+Model:    gemini-2.5-flash  (via Vertex AI, asia-south1)
+Input:    image bytes (Part.from_bytes) + CLASSIFY_PROMPT (Part.from_text)
+Output:   Structured JSON with response_schema = HAIR_CLASSIFICATION_SCHEMA
+Config:   max_output_tokens=512, thinking_budget=0
+Latency:  ~1-3 seconds per classification</div>
+
+  <h3>Classification output fields</h3>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Values</th></tr>
+    <tr><td>hair_pattern</td><td>Enum</td><td>straight, wavy, curly, coily, unable_to_determine</td></tr>
+    <tr><td>hair_pattern_code</td><td>Enum</td><td>1a through 4c, unknown</td></tr>
+    <tr><td>frizz_level</td><td>Enum</td><td>none, mild, moderate, severe</td></tr>
+    <tr><td>damage_signs</td><td>Enum</td><td>none, mild, moderate, severe</td></tr>
+    <tr><td>length</td><td>Enum</td><td>short, medium, long, very_long</td></tr>
+    <tr><td>confidence</td><td>Enum</td><td>high, medium, low</td></tr>
+    <tr><td>notes</td><td>Free text</td><td>Additional observations</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<h2>2. Cost Per Classification: Gemini 2.5 Flash</h2>
+<!-- ============================================================ -->
+
+<div class="card llm">
+  <span class="badge llm">LLM Cost Breakdown</span>
+
+  <h3>Token consumption per request</h3>
+  <table>
+    <tr><th>Component</th><th>Tokens (est.)</th><th>Rate</th><th>Cost</th></tr>
+    <tr><td>Image input (single photo)</td><td class="num">~1,610</td><td>$0.30 / 1M input tokens</td><td class="num">$0.000483</td></tr>
+    <tr><td>Text prompt (CLASSIFY_PROMPT)</td><td class="num">~80</td><td>$0.30 / 1M input tokens</td><td class="num">$0.000024</td></tr>
+    <tr><td>JSON output (~150 tokens)</td><td class="num">~150</td><td>$2.50 / 1M output tokens</td><td class="num">$0.000375</td></tr>
+    <tr style="font-weight:700;background:#f0f7ff"><td>Total per classification</td><td class="num">~1,840</td><td></td><td class="num">~$0.00088</td></tr>
+  </table>
+
+  <div class="metric-grid">
+    <div class="metric-box">
+      <div class="label">Cost per call</div>
+      <div class="value">$0.00088</div>
+      <div class="detail">~0.088 cents</div>
+    </div>
+    <div class="metric-box">
+      <div class="label">100 / day</div>
+      <div class="value">$0.088</div>
+      <div class="detail">$2.64 / month</div>
+    </div>
+    <div class="metric-box">
+      <div class="label">1,000 / day</div>
+      <div class="value">$0.88</div>
+      <div class="detail">$26.40 / month</div>
+    </div>
+    <div class="metric-box">
+      <div class="label">10,000 / day</div>
+      <div class="value">$8.80</div>
+      <div class="detail">$264 / month</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.85rem;color:#6c757d;">
+    Note: Gemini 2.5 Flash image input tokenization uses approximately 1,610 tokens for a typical photo (512x512). Higher resolution images may consume more tokens. Pricing is based on Vertex AI pay-as-you-go rates (May 2026).
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<h2>3. Custom ML Model: What It Would Take</h2>
+<!-- ============================================================ -->
+
+<div class="card ml">
+  <span class="badge ml">Alternative: Custom Vision Model</span>
+
+  <h3>Architecture options</h3>
+  <table>
+    <tr><th>Approach</th><th>Model</th><th>Complexity</th><th>Expected accuracy (with ~800 images)</th></tr>
+    <tr><td>Fine-tuned CNN</td><td>EfficientNet-B0 / ResNet-50</td><td>Medium</td><td>75&ndash;85% on hair pattern alone</td></tr>
+    <tr><td>Fine-tuned ViT</td><td>ViT-B/16 (ImageNet pretrained)</td><td>Medium-High</td><td>78&ndash;87% on hair pattern alone</td></tr>
+    <tr><td>CLIP-based zero-shot</td><td>OpenCLIP ViT-L/14</td><td>Low (no training)</td><td>60&ndash;72% (no fine-tuning)</td></tr>
+    <tr><td>Multi-head classifier</td><td>EfficientNet backbone + 6 classification heads</td><td>High</td><td>Variable per attribute</td></tr>
+  </table>
+
+  <h3>The multi-attribute challenge</h3>
+  <p>The current LLM classifier predicts <strong>7 attributes simultaneously</strong> (hair_pattern, pattern_code, frizz, damage, length, confidence, notes). A custom ML model would need:</p>
+  <ul style="font-size:0.9rem">
+    <li><strong>Separate classification heads</strong> for each attribute (or a multi-task learning setup)</li>
+    <li><strong>Separate labeling</strong> for every attribute on every image &mdash; 800 images x 6 discrete attributes = 4,800 labels minimum</li>
+    <li><strong>No "notes" equivalent</strong> &mdash; a vision CNN cannot generate free-text observations like "highlights visible, some heat damage at ends"</li>
+    <li><strong>No "confidence" reasoning</strong> &mdash; model confidence (softmax probability) is not the same as the LLM's reasoned self-assessment</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>4. Side-by-Side Comparison</h2>
+<!-- ============================================================ -->
+
+<div class="compare-grid">
+  <div class="card llm" style="margin:0">
+    <span class="badge llm">Gemini 2.5 Flash (Current)</span>
+    <h3>Pros</h3>
+    <ul class="pro-con-list pros">
+      <li>Zero training data required &mdash; works out of the box</li>
+      <li>Classifies all 7 attributes in a single call</li>
+      <li>Generates free-text "notes" with nuanced observations</li>
+      <li>Self-assesses confidence with reasoning</li>
+      <li>Handles edge cases gracefully (blurry photos, non-hair images)</li>
+      <li>No model hosting infrastructure &mdash; pure API call</li>
+      <li>Automatically improves as Google updates the model</li>
+      <li>Structured JSON output guaranteed by schema enforcement</li>
+      <li>Instant deployment &mdash; already integrated and working</li>
+      <li>Handles diverse hair types, lighting conditions, angles without training</li>
+    </ul>
+    <h3>Cons</h3>
+    <ul class="pro-con-list cons">
+      <li>Vendor dependency on Google / Vertex AI</li>
+      <li>Per-request cost increases linearly with traffic</li>
+      <li>Latency ~1&ndash;3s per request (network round-trip to Vertex AI)</li>
+      <li>Non-deterministic &mdash; same image may yield slightly different results</li>
+      <li>Cannot be customized to Moxie's specific hair type taxonomy</li>
+      <li>Potential for hallucinated observations in "notes" field</li>
+    </ul>
+  </div>
+
+  <div class="card ml" style="margin:0">
+    <span class="badge ml">Custom ML Model (Proposed)</span>
+    <h3>Pros</h3>
+    <ul class="pro-con-list pros">
+      <li>Fixed hosting cost at scale &mdash; does not increase per-request</li>
+      <li>Much faster inference (~50&ndash;200ms on GPU, ~200&ndash;500ms on CPU)</li>
+      <li>Fully deterministic outputs</li>
+      <li>Can be customized to Moxie's exact taxonomy</li>
+      <li>No vendor dependency for inference once deployed</li>
+      <li>Can run on-device (TFLite/ONNX) for zero-latency classification</li>
+      <li>Model is an owned asset</li>
+    </ul>
+    <h3>Cons</h3>
+    <ul class="pro-con-list cons">
+      <li>Requires ~800+ labeled images across ALL attributes (currently pending)</li>
+      <li>Cannot generate free-text notes or nuanced observations</li>
+      <li>6 separate classification heads needed for multi-attribute output</li>
+      <li>800 images is marginal &mdash; expect lower accuracy on rare categories (coily, 4a-4c)</li>
+      <li>Hosting cost even when idle (~$800/mo for Vertex AI GPU endpoint, or ~$490/mo for Cloud Run L4 GPU)</li>
+      <li>Requires ML engineering effort to build, train, validate, and deploy</li>
+      <li>Ongoing maintenance: retraining pipeline, data drift monitoring, model versioning</li>
+      <li>Does not handle edge cases well (non-hair images, blurry photos) without explicit training</li>
+      <li>Training data class imbalance likely (wavy/curly overrepresented in Indian market)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>5. Cost Projections at Scale</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr>
+    <th>Daily volume</th>
+    <th>Monthly requests</th>
+    <th>Gemini 2.5 Flash<br><span style="font-weight:400;font-size:0.78rem">Pay-per-call</span></th>
+    <th>Vertex AI Endpoint<br><span style="font-weight:400;font-size:0.78rem">L4 GPU, always-on</span></th>
+    <th>Cloud Run + L4 GPU<br><span style="font-weight:400;font-size:0.78rem">Scale-to-zero</span></th>
+  </tr>
+  <tr>
+    <td>100 / day</td>
+    <td class="num">3,000</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">$2.64</td>
+    <td class="num" style="color:var(--danger)">~$800</td>
+    <td class="num">~$15 &ndash; $30 *</td>
+  </tr>
+  <tr>
+    <td>1,000 / day</td>
+    <td class="num">30,000</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">$26.40</td>
+    <td class="num" style="color:var(--danger)">~$800</td>
+    <td class="num">~$60 &ndash; $120 *</td>
+  </tr>
+  <tr>
+    <td>10,000 / day</td>
+    <td class="num">300,000</td>
+    <td class="num">$264</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">~$800</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">~$200 &ndash; $400 *</td>
+  </tr>
+  <tr>
+    <td>50,000 / day</td>
+    <td class="num">1,500,000</td>
+    <td class="num" style="color:var(--danger)">$1,320</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">~$800 &ndash; $1,600 **</td>
+    <td class="num" style="color:var(--accent-ml);font-weight:700">~$500 &ndash; $900 *</td>
+  </tr>
+</table>
+
+<p style="font-size:0.8rem;color:#6c757d;">
+  * Cloud Run L4 GPU at ~$0.67/hr, billed per-second with scale-to-zero. Assumes ~200ms inference per request. Cold start adds ~10&ndash;30s for the first request after idle.<br>
+  ** At 50K/day, a Vertex AI endpoint may need 2 nodes to handle concurrent load.<br>
+  Green indicates the lower-cost option at each traffic level. Gemini wins decisively at lower volumes.
+</p>
+
+<!-- ============================================================ -->
+<h2>6. Accuracy and Quality Tradeoffs</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>Dimension</th><th>Gemini 2.5 Flash</th><th>Custom ML (EfficientNet-B0)</th></tr>
+  <tr>
+    <td>Hair pattern classification</td>
+    <td>Very good &mdash; pre-trained on internet-scale image data including diverse hair types</td>
+    <td>Good with sufficient data &mdash; ~80&ndash;85% accuracy expected with 800 labeled images (per published benchmarks on similar tasks)</td>
+  </tr>
+  <tr>
+    <td>Hair pattern sub-code (1a&ndash;4c)</td>
+    <td>Reasonable &mdash; can distinguish sub-types though may conflate adjacent codes (2b vs 2c)</td>
+    <td>Challenging &mdash; 12-class problem with ~65 images per class on average; expect ~60&ndash;70% accuracy</td>
+  </tr>
+  <tr>
+    <td>Frizz level</td>
+    <td>Good &mdash; understands visual frizz indicators from pre-training</td>
+    <td>Moderate &mdash; subjective attribute, harder to label consistently</td>
+  </tr>
+  <tr>
+    <td>Damage signs</td>
+    <td>Moderate &mdash; can identify split ends, dryness, breakage from visual cues</td>
+    <td>Difficult &mdash; subtle visual feature, likely needs many more examples</td>
+  </tr>
+  <tr>
+    <td>Length classification</td>
+    <td>Good &mdash; straightforward visual attribute</td>
+    <td>Good &mdash; simple enough for a CNN with limited data</td>
+  </tr>
+  <tr>
+    <td>Free-text notes</td>
+    <td>Excellent &mdash; can describe highlights, texture, porosity indicators, styling state</td>
+    <td>Not possible &mdash; would need a separate captioning model or be dropped entirely</td>
+  </tr>
+  <tr>
+    <td>Edge case handling</td>
+    <td>Strong &mdash; can identify non-hair images, blurry photos, express uncertainty</td>
+    <td>Requires explicit out-of-distribution detection training</td>
+  </tr>
+  <tr>
+    <td>Indian hair diversity</td>
+    <td>Good &mdash; trained on global data including Indian hair types</td>
+    <td>Depends on dataset composition &mdash; if Moxie's 800 photos are from their customer base, this could actually be better for the target demographic</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>7. Latency Comparison</h2>
+<!-- ============================================================ -->
+
+<div class="metric-grid">
+  <div class="metric-box">
+    <div class="label">Gemini 2.5 Flash</div>
+    <div class="value">1&ndash;3s</div>
+    <div class="detail">Network RTT + model inference via Vertex AI</div>
+  </div>
+  <div class="metric-box">
+    <div class="label">Custom ML (GPU)</div>
+    <div class="value">50&ndash;200ms</div>
+    <div class="detail">Inference only, warm instance</div>
+  </div>
+  <div class="metric-box">
+    <div class="label">Custom ML (CPU)</div>
+    <div class="value">200&ndash;500ms</div>
+    <div class="detail">ONNX Runtime on Cloud Run CPU</div>
+  </div>
+  <div class="metric-box">
+    <div class="label">Custom ML (on-device)</div>
+    <div class="value">30&ndash;100ms</div>
+    <div class="detail">TFLite on mobile, zero network</div>
+  </div>
+</div>
+
+<p style="font-size:0.88rem;">The current 1&ndash;3s latency for photo classification is acceptable in context &mdash; the user waits for a typing indicator while the photo is analyzed, and the subsequent chat message takes another 2&ndash;4s (retrieval + Gemini chat call). The photo analysis latency is not the bottleneck.</p>
+
+<!-- ============================================================ -->
+<h2>8. Engineering Effort and Maintenance</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>Task</th><th>Gemini 2.5 Flash</th><th>Custom ML Model</th></tr>
+  <tr>
+    <td>Initial development</td>
+    <td>Already done (~50 lines of code in llm.py)</td>
+    <td>2&ndash;4 weeks: dataset prep, labeling verification, architecture selection, training, evaluation, deployment pipeline</td>
+  </tr>
+  <tr>
+    <td>Data labeling</td>
+    <td>None required</td>
+    <td>~800 images x 6 attributes = 4,800 individual labels to verify/create. Estimated 40&ndash;60 hours of labeling effort.</td>
+  </tr>
+  <tr>
+    <td>Infrastructure</td>
+    <td>Zero &mdash; Vertex AI API</td>
+    <td>Model registry, serving endpoint (Vertex AI or Cloud Run), CI/CD for model updates, monitoring</td>
+  </tr>
+  <tr>
+    <td>Ongoing maintenance</td>
+    <td>Near zero &mdash; Google maintains the model. Monitor for API changes / deprecation.</td>
+    <td>Continuous: retraining with new data, accuracy monitoring, data drift detection, A/B testing</td>
+  </tr>
+  <tr>
+    <td>Adding new attributes</td>
+    <td>Update the prompt and JSON schema (minutes)</td>
+    <td>Collect labeled data, add classification head, retrain, validate, deploy (days&ndash;weeks)</td>
+  </tr>
+  <tr>
+    <td>Handling new hair types/categories</td>
+    <td>Automatic &mdash; the LLM already understands new categories</td>
+    <td>Requires new training data and retraining</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>9. The 800-Image Dataset Constraint</h2>
+<!-- ============================================================ -->
+
+<div class="card warn">
+  <span class="badge warn">Critical Constraint</span>
+  <p>The Moxie team has <strong>~800 labeled hair photos pending</strong>. This is a key factor in the decision:</p>
+
+  <table>
+    <tr><th>Consideration</th><th>Assessment</th></tr>
+    <tr>
+      <td>Is 800 images enough for fine-tuning?</td>
+      <td><strong>Marginal.</strong> Published research shows fine-tuned vision models (ResNet, EfficientNet) can achieve 75&ndash;85% accuracy on hair-type classification with similar dataset sizes. However, this is for a <em>single</em> classification task. Multi-attribute classification across 6 fields with 800 images will perform inconsistently.</td>
+    </tr>
+    <tr>
+      <td>Class balance</td>
+      <td><strong>Likely imbalanced.</strong> Moxie's customer base skews toward wavy/curly hair (2a&ndash;3c) in the Indian market. Straight (1a&ndash;1c) and coily (4a&ndash;4c) categories will likely have far fewer examples, leading to poor classification on those types.</td>
+    </tr>
+    <tr>
+      <td>Labeling quality</td>
+      <td><strong>Uncertain.</strong> Hair type labels are subjective, especially for sub-codes (2b vs 2c). Inter-annotator agreement on frizz and damage levels is typically low. The quality of the 800 labels will directly bound model quality.</td>
+    </tr>
+    <tr>
+      <td>Data augmentation potential</td>
+      <td><strong>Moderate.</strong> Standard augmentations (flip, rotate, color jitter, crop) can synthetically expand the dataset 5&ndash;10x, but cannot compensate for missing categories or labeling inconsistency.</td>
+    </tr>
+    <tr>
+      <td>Scaling data collection</td>
+      <td><strong>Slow path.</strong> Growing from 800 to 5,000+ high-quality labeled images would take months. Each image needs expert labeling across all 6 attributes.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<h2>10. Hybrid Approach (Future Option)</h2>
+<!-- ============================================================ -->
+
+<div class="card" style="border-left: 5px solid #6f42c1;">
+  <span class="badge" style="background:#6f42c1">Hybrid: LLM + ML</span>
+  <p>A phased approach could capture the best of both worlds:</p>
+  <table>
+    <tr><th>Phase</th><th>Approach</th><th>When</th></tr>
+    <tr>
+      <td><strong>Phase 1 (Now)</strong></td>
+      <td>Keep Gemini 2.5 Flash. Use it to auto-label the 800 photos (and future uploads) to build a high-quality labeled dataset at near-zero marginal cost. Log every classification with the original image for future training data.</td>
+      <td>Immediate</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2 (3&ndash;6 months)</strong></td>
+      <td>Once 3,000&ndash;5,000 LLM-labeled + human-verified images exist, train a lightweight EfficientNet multi-head classifier for the 4 most objective attributes (hair_pattern, pattern_code, length, frizz_level). Keep Gemini for "damage_signs" and "notes".</td>
+      <td>When dataset reaches 3K+ verified images</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3 (6&ndash;12 months)</strong></td>
+      <td>If traffic exceeds 10K/day and cost becomes a concern, deploy the custom model on Cloud Run with scale-to-zero. Use Gemini as a fallback for edge cases and to generate "notes".</td>
+      <td>When daily volume justifies infrastructure cost</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<h2>11. Recommendation</h2>
+<!-- ============================================================ -->
+
+<div class="card rec">
+  <span class="badge rec">Recommendation</span>
+  <h3>Keep Gemini 2.5 Flash for now. Start building the dataset for a future transition.</h3>
+
+  <p><strong>Reasoning:</strong></p>
+  <ol style="font-size:0.92rem;">
+    <li><strong>Cost is not a problem at current scale.</strong> At 100&ndash;1,000 classifications/day, Gemini costs $2.64&ndash;$26.40/month. A custom ML endpoint would cost $490&ndash;$800/month minimum, even with Cloud Run scale-to-zero. The breakeven point is somewhere around 25,000&ndash;30,000 classifications per day.</li>
+    <li><strong>800 images is insufficient for a 7-attribute classifier.</strong> The current LLM approach handles all 7 attributes plus free-text notes. A custom ML model would need to drop the "notes" field entirely and would struggle with the 12-class hair pattern sub-code problem given the dataset size.</li>
+    <li><strong>The LLM is already integrated and working.</strong> Switching introduces engineering cost (2&ndash;4 weeks development + ongoing maintenance) with no clear accuracy improvement and a definite loss of the "notes" and confidence-reasoning capabilities.</li>
+    <li><strong>Latency is acceptable.</strong> The 1&ndash;3s classification time is not the user-facing bottleneck &mdash; the subsequent chat LLM call takes longer.</li>
+    <li><strong>Start accumulating data now.</strong> Log every Gemini classification alongside the original image. Use the LLM as an auto-labeler. When the dataset grows to 3,000&ndash;5,000 verified images and traffic justifies the infrastructure spend, re-evaluate the custom ML path.</li>
+  </ol>
+
+  <h3>Summary decision matrix</h3>
+  <table>
+    <tr><th>Factor</th><th>Winner</th><th>Why</th></tr>
+    <tr><td>Cost at current scale (&lt;1K/day)</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>$26/mo vs $490+/mo minimum</td></tr>
+    <tr><td>Cost at high scale (&gt;30K/day)</td><td style="color:var(--accent-ml);font-weight:700">Custom ML</td><td>Fixed hosting vs linear API cost</td></tr>
+    <tr><td>Multi-attribute classification</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>7 attributes + notes in one call</td></tr>
+    <tr><td>Accuracy (with 800 images available)</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>Pre-trained on internet-scale data</td></tr>
+    <tr><td>Inference latency</td><td style="color:var(--accent-ml);font-weight:700">Custom ML</td><td>50&ndash;200ms vs 1&ndash;3s</td></tr>
+    <tr><td>Engineering effort</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>Already built (50 LOC) vs 2&ndash;4 weeks</td></tr>
+    <tr><td>Maintenance burden</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>Zero vs continuous retraining</td></tr>
+    <tr><td>Flexibility (new attributes)</td><td style="color:var(--accent-llm);font-weight:700">LLM</td><td>Prompt change vs retrain</td></tr>
+    <tr><td>Vendor independence</td><td style="color:var(--accent-ml);font-weight:700">Custom ML</td><td>Owned asset vs API dependency</td></tr>
+    <tr><td>Determinism</td><td style="color:var(--accent-ml);font-weight:700">Custom ML</td><td>Same input = same output</td></tr>
+  </table>
+
+  <p style="margin-top:1rem;font-size:0.92rem;"><strong>Bottom line:</strong> The LLM approach wins on 7 of 10 factors. The custom ML model only becomes attractive when daily volume exceeds ~25K&ndash;30K classifications AND a sufficiently large, well-labeled dataset exists. Neither condition is met today. Invest the effort in data collection and logging instead.</p>
+</div>
+
+<!-- ============================================================ -->
+
+<div class="sources">
+  <p><strong>Sources and references:</strong></p>
+  <ul>
+    <li><a href="https://ai.google.dev/gemini-api/docs/pricing">Gemini Developer API Pricing</a> &mdash; Google AI for Developers</li>
+    <li><a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing">Vertex AI / Agent Platform Pricing</a> &mdash; Google Cloud</li>
+    <li><a href="https://pricepertoken.com/pricing-page/model/google-gemini-2.5-flash">Gemini 2.5 Flash Pricing Details</a> &mdash; PricePerToken</li>
+    <li><a href="https://cloud.google.com/run/pricing">Cloud Run Pricing</a> &mdash; Google Cloud</li>
+    <li><a href="https://cloud.google.com/vertex-ai/pricing">Vertex AI Pricing</a> &mdash; Google Cloud</li>
+    <li><a href="https://github.com/Kavya-sree/Hair-Type-Classifier">Hair Type Classifier (fastai)</a> &mdash; GitHub</li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9605010/">Hair Follicle Classification Using Mask R-CNN</a> &mdash; PMC</li>
+    <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11898587/">EfficientNet + ResNet for Multi-Class Classification</a> &mdash; PMC</li>
+    <li><a href="https://docs.google.com/cloud/run/docs/configuring/services/gpu">Cloud Run GPU Support</a> &mdash; Google Cloud</li>
+  </ul>
+  <p style="margin-top:1rem;">Generated for MoxieBuddy / HairGPT &mdash; based on codebase at commit 98d3e8b. Pricing data as of May 2026.</p>
+</div>
+
+</div>
+</body>
+</html>

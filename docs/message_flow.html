@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoxieBuddy &mdash; Message Flow Documentation</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --accent-text: #0d6efd;
+    --accent-photo: #6f42c1;
+    --accent-option: #198754;
+    --accent-video: #dc3545;
+    --code-bg: #f1f3f5;
+    --arrow-color: #6c757d;
+    --step-size: 36px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem 1rem; font-family: var(--font);
+    background: var(--bg); color: #212529; line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+  .subtitle { color: #6c757d; font-size: 1rem; margin-bottom: 2.5rem; }
+  h2 {
+    font-size: 1.4rem; margin: 2.5rem 0 0.5rem; padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+
+  /* ---------- Architecture overview ---------- */
+  .arch-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1.5rem 0;
+  }
+  .arch-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; text-align: center;
+  }
+  .arch-box strong { display: block; margin-bottom: 0.3rem; }
+  .arch-box code { font-size: 0.8rem; color: #6c757d; }
+
+  /* ---------- Flow section ---------- */
+  .flow-section {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem 2rem; margin: 1.5rem 0;
+  }
+  .flow-section.text    { border-left: 5px solid var(--accent-text); }
+  .flow-section.photo   { border-left: 5px solid var(--accent-photo); }
+  .flow-section.option  { border-left: 5px solid var(--accent-option); }
+  .flow-section.video   { border-left: 5px solid var(--accent-video); }
+
+  .flow-label {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; padding: 0.2rem 0.6rem;
+    border-radius: 4px; color: #fff; margin-bottom: 0.75rem;
+  }
+  .flow-label.text   { background: var(--accent-text); }
+  .flow-label.photo  { background: var(--accent-photo); }
+  .flow-label.option { background: var(--accent-option); }
+  .flow-label.video  { background: var(--accent-video); }
+
+  /* Step list */
+  .steps { list-style: none; padding: 0; margin: 0; position: relative; }
+  .steps::before {
+    content: ""; position: absolute; left: calc(var(--step-size) / 2 - 1px);
+    top: var(--step-size); bottom: var(--step-size);
+    width: 2px; background: var(--border);
+  }
+  .step {
+    display: flex; gap: 1rem; align-items: flex-start; position: relative;
+    margin-bottom: 0.75rem;
+  }
+  .step-num {
+    flex-shrink: 0; width: var(--step-size); height: var(--step-size);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: #fff; z-index: 1;
+  }
+  .flow-section.text  .step-num { background: var(--accent-text); }
+  .flow-section.photo .step-num { background: var(--accent-photo); }
+  .flow-section.option .step-num { background: var(--accent-option); }
+  .flow-section.video .step-num { background: var(--accent-video); }
+
+  .step-body { padding-top: 0.35rem; flex: 1; }
+  .step-body strong { display: block; margin-bottom: 0.15rem; }
+  .step-body p { margin: 0 0 0.3rem; font-size: 0.92rem; }
+  .file-ref {
+    display: inline-block; font-size: 0.78rem; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--code-bg); padding: 0.15rem 0.45rem; border-radius: 4px;
+    color: #495057; margin-right: 0.4rem; margin-bottom: 0.25rem;
+  }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em; background: var(--code-bg); padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+
+  /* Arrow between steps */
+  .arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--arrow-color); font-size: 1.2rem; margin: 0.15rem 0 0.15rem calc(var(--step-size) / 2 - 6px);
+  }
+
+  /* Data box */
+  .data-box {
+    background: var(--code-bg); border-radius: 6px; padding: 0.75rem 1rem;
+    font-size: 0.82rem; overflow-x: auto; margin: 0.5rem 0;
+    font-family: "SFMono-Regular", Consolas, monospace; white-space: pre-wrap;
+  }
+
+  /* Config table */
+  .config-table {
+    width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem;
+  }
+  .config-table th, .config-table td {
+    text-align: left; padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .config-table th { background: var(--code-bg); font-weight: 600; }
+
+  /* Tool definition cards */
+  .tool-card {
+    background: var(--code-bg); border-radius: 8px; padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+  }
+  .tool-card h4 { margin: 0 0 0.3rem; font-size: 1rem; }
+  .tool-card p { margin: 0 0 0.4rem; font-size: 0.88rem; }
+  .tool-card .params { font-size: 0.82rem; }
+
+  /* Connector arrow between sections */
+  .section-connector {
+    text-align: center; color: var(--arrow-color); font-size: 1.5rem;
+    margin: 0.5rem 0; line-height: 1;
+  }
+
+  @media (max-width: 700px) {
+    body { padding: 1rem 0.5rem; }
+    .flow-section { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>MoxieBuddy &mdash; Message Flow Map</h1>
+<p class="subtitle">How every message type travels from the Streamlit UI through the FastAPI backend to a Gemini-powered response.</p>
+
+<!-- ============================================================ -->
+<h2>System Architecture Overview</h2>
+<!-- ============================================================ -->
+
+<div class="arch-grid">
+  <div class="arch-box">
+    <strong>Streamlit UI</strong>
+    <code>scripts/demo_ui.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">Chat interface, photo upload, option buttons, YouTube embeds</p>
+  </div>
+  <div class="arch-box">
+    <strong>FastAPI Backend</strong>
+    <code>app/main.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">POST /chat, POST /photo/analyze, GET /health</p>
+  </div>
+  <div class="arch-box">
+    <strong>Orchestrator</strong>
+    <code>app/orchestrator.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">RAG retrieval, prompt build, Gemini call, tool-call loop</p>
+  </div>
+  <div class="arch-box">
+    <strong>Retrieval (RAG)</strong>
+    <code>app/retrieval.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">Hybrid pgvector + FTS scoring from kb_chunks</p>
+  </div>
+  <div class="arch-box">
+    <strong>LLM Client</strong>
+    <code>app/llm.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">Gemini 2.5 Flash, embeddings (text-embedding-005), photo classifier</p>
+  </div>
+  <div class="arch-box">
+    <strong>Cloud SQL (Postgres)</strong>
+    <code>app/db.py</code>
+    <p style="font-size:0.82rem;margin:0.4rem 0 0">asyncpg + Cloud SQL Connector, pgvector, FTS indexes</p>
+  </div>
+</div>
+
+<table class="config-table">
+  <tr><th>Parameter</th><th>Value</th><th>Source</th></tr>
+  <tr><td>Chat model</td><td><code>gemini-2.5-flash</code></td><td>app/llm.py &rarr; FLASH</td></tr>
+  <tr><td>Embedding model</td><td><code>text-embedding-005</code></td><td>app/llm.py &rarr; EMBED_MODEL</td></tr>
+  <tr><td>Embedding dimensions</td><td>768</td><td>app/llm.py &rarr; EMBED_DIM</td></tr>
+  <tr><td>Chat temperature</td><td>0.7</td><td>app/orchestrator.py &rarr; config</td></tr>
+  <tr><td>Chat max output tokens</td><td>1024</td><td>app/orchestrator.py &rarr; config</td></tr>
+  <tr><td>Thinking budget (chat)</td><td>0 (disabled)</td><td>app/orchestrator.py &rarr; ThinkingConfig</td></tr>
+  <tr><td>Classifier max output tokens</td><td>512</td><td>app/llm.py &rarr; classify_hair_photo</td></tr>
+  <tr><td>Retrieval top-k</td><td>5</td><td>app/orchestrator.py &rarr; retrieve(top_k=5)</td></tr>
+  <tr><td>Vector candidate pool</td><td>30</td><td>app/retrieval.py &rarr; LIMIT 30 (vec CTE)</td></tr>
+  <tr><td>FTS candidate pool</td><td>30</td><td>app/retrieval.py &rarr; LIMIT 30 (fts CTE)</td></tr>
+  <tr><td>Hybrid weight (vector)</td><td>0.7</td><td>app/retrieval.py &rarr; vec_score * 0.7</td></tr>
+  <tr><td>Hybrid weight (FTS)</td><td>0.3</td><td>app/retrieval.py &rarr; fts_score * 0.3</td></tr>
+  <tr><td>Max tool-call rounds</td><td>3</td><td>app/orchestrator.py &rarr; for _ in range(3)</td></tr>
+  <tr><td>GCP project</td><td>hairgpt-496305</td><td>app/config.py</td></tr>
+  <tr><td>GCP location</td><td>asia-south1</td><td>app/config.py</td></tr>
+  <tr><td>Database</td><td>Cloud SQL &mdash; hairgpt-496305:asia-south1:hairgpt-db</td><td>app/config.py</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Tool Definitions (passed to Gemini)</h2>
+<!-- ============================================================ -->
+
+<div class="tool-card">
+  <h4><code>recommend_routine</code></h4>
+  <p>Get the recommended Moxie product routine based on hair attributes and goals. Called when the user has shared enough about their hair type and what they need.</p>
+  <div class="params">
+    <strong>Parameters (OBJECT):</strong><br>
+    &bull; <code>hair_pattern</code> &mdash; STRING, enum: straight | wavy | curly | coily <em>(required)</em><br>
+    &bull; <code>primary_goal</code> &mdash; STRING, enum: frizz_control | wave_definition | curl_definition | damage_repair | general_care <em>(required)</em><br>
+    &bull; <code>is_chemically_treated</code> &mdash; BOOLEAN<br>
+    &bull; <code>is_colored</code> &mdash; BOOLEAN
+  </div>
+  <p style="margin-top:0.5rem"><strong>Execution:</strong> <span class="file-ref">app/recommendations.py</span> <code>recommend_routine()</code> &mdash; iterates RECOMMENDATION_RULES list, returns first match (routine name + enriched products from <code>product_catalog.json</code>). Falls back to "Rinse &amp; Shine Duo".</p>
+</div>
+
+<div class="tool-card">
+  <h4><code>get_product</code></h4>
+  <p>Get details (name, price, link) for a specific Moxie product by its Shopify handle.</p>
+  <div class="params">
+    <strong>Parameters (OBJECT):</strong><br>
+    &bull; <code>product_handle</code> &mdash; STRING <em>(required)</em>, e.g. "gentle-cleansing-shampoo"
+  </div>
+  <p style="margin-top:0.5rem"><strong>Execution:</strong> <span class="file-ref">app/recommendations.py</span> <code>get_product()</code> &mdash; looks up handle in PRODUCT_CATALOG dict loaded from <code>data/product_catalog.json</code>.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Flow 1 &mdash; Text Message (Regular Chat)</h2>
+<!-- ============================================================ -->
+
+<div class="flow-section text">
+  <span class="flow-label text">Text Message</span>
+
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <strong>User types message in Streamlit</strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> <code>st.chat_input("Ask me anything about hair care...")</code></p>
+        <p>The input is captured as <code>prompt</code>. If the user previously had a photo context stored in <code>st.session_state.hair_context</code>, the summary is prepended to the message as a <code>[Hair photo analysis: ...]</code> prefix.</p>
+        <div class="data-box">actual_message = "[Hair photo analysis: {summary}]\n\n{user_text}"   # if photo context exists
+actual_message = "{user_text}"                                     # otherwise</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <strong>HTTP POST to <code>/chat</code></strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> sends <code>httpx.post(API_URL + "/chat", json={"message": actual_message, "history": api_history})</code></p>
+        <div class="data-box">POST /chat
+{
+  "message": "My hair is so frizzy, help!",
+  "history": [
+    {"role": "user", "content": "..."},
+    {"role": "assistant", "content": "..."}
+  ]
+}</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <strong>FastAPI endpoint receives request</strong>
+        <p><span class="file-ref">app/main.py</span> <code>chat_endpoint(req: ChatRequest)</code> &rarr; generates a session_id if empty, then delegates to the orchestrator.</p>
+        <p>Calls: <code>response_text, updated_history, options = await chat(req.message, req.history)</code></p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <strong>RAG Retrieval &mdash; embed query + hybrid search</strong>
+        <p><span class="file-ref">app/orchestrator.py</span> <code>chunks = await retrieve(user_message, top_k=5)</code></p>
+        <p><span class="file-ref">app/retrieval.py</span> <code>retrieve()</code> does two things:</p>
+        <p><strong>4a.</strong> Embed the query: <code>query_emb = (await embed([query]))[0]</code> using <span class="file-ref">app/llm.py</span> <code>embed()</code> &rarr; calls Vertex AI <code>text-embedding-005</code> with <code>output_dimensionality=768</code>.</p>
+        <p><strong>4b.</strong> Run hybrid SQL query against <code>kb_chunks</code> table:</p>
+        <div class="data-box">-- CTE 1: Vector search (cosine similarity)
+WITH vec AS (
+    SELECT id, content, chunk_type, source_id, product_refs, hair_types,
+           1 - (embedding &lt;=&gt; $1::vector) AS vec_score
+    FROM kb_chunks WHERE is_active
+    ORDER BY embedding &lt;=&gt; $1::vector
+    LIMIT 30
+),
+-- CTE 2: Full-text search
+fts AS (
+    SELECT id, ts_rank_cd(content_tsv, plainto_tsquery('english', $2)) AS fts_score
+    FROM kb_chunks
+    WHERE is_active AND content_tsv @@ plainto_tsquery('english', $2)
+    LIMIT 30
+)
+-- Combine with hybrid scoring
+SELECT ..., v.vec_score * 0.7 + COALESCE(f.fts_score, 0) * 0.3 AS score
+FROM vec v LEFT JOIN fts f ON v.id = f.id
+ORDER BY score DESC LIMIT 5</div>
+        <p>Returns list of <code>RetrievedChunk</code> objects (id, content, chunk_type, source_id, product_refs, hair_types, score).</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">5</span>
+      <div class="step-body">
+        <strong>Build system prompt with retrieval context</strong>
+        <p><span class="file-ref">app/orchestrator.py</span> <code>retrieval_context = format_retrieval_context(chunks)</code></p>
+        <p><span class="file-ref">app/retrieval.py</span> <code>format_retrieval_context()</code> formats each chunk as <code>[Chunk Type] content</code>, joined by <code>---</code> separators.</p>
+        <p><span class="file-ref">app/prompts.py</span> <code>build_system_prompt(retrieval_context)</code> appends the retrieval context under a <code>## Relevant knowledge from Moxie's database</code> header to the base SYSTEM_PROMPT.</p>
+        <p>The system prompt contains: persona (MoxieBuddy), tone rules, brand guidelines, response length limits (60 words), product recommendation rules, escalation rules, few-shot examples, OPTIONS instruction, and the RAG context.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">6</span>
+      <div class="step-body">
+        <strong>Prepare contents and call Gemini 2.5 Flash</strong>
+        <p><span class="file-ref">app/orchestrator.py</span></p>
+        <p>Converts <code>history</code> to <code>list[types.Content]</code> via <code>_history_to_contents()</code> (maps "assistant" &rarr; "model" role). Appends the new user message.</p>
+        <div class="data-box">config = GenerateContentConfig(
+    system_instruction = system_prompt,
+    tools = [TOOLS],               # recommend_routine, get_product
+    temperature = 0.7,
+    max_output_tokens = 1024,
+    thinking_config = ThinkingConfig(thinking_budget=0)
+)
+
+resp = await client.aio.models.generate_content(
+    model="gemini-2.5-flash", contents=contents, config=config
+)</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">7</span>
+      <div class="step-body">
+        <strong>Tool-call loop (up to 3 rounds)</strong>
+        <p><span class="file-ref">app/orchestrator.py</span></p>
+        <p>After each Gemini response, checks for <code>function_call</code> parts. If found:</p>
+        <p><strong>7a.</strong> Appends the model's response (with tool calls) to contents.</p>
+        <p><strong>7b.</strong> Executes each tool via <code>_execute_tool(name, args)</code>:</p>
+        <ul style="font-size:0.88rem;">
+          <li><code>recommend_routine</code> &rarr; <span class="file-ref">app/recommendations.py</span> matches against RECOMMENDATION_RULES, enriches with product_catalog.json data</li>
+          <li><code>get_product</code> &rarr; <span class="file-ref">app/recommendations.py</span> looks up product handle in PRODUCT_CATALOG</li>
+        </ul>
+        <p><strong>7c.</strong> Appends tool results as <code>Part.from_function_response</code> and calls Gemini again.</p>
+        <p><strong>7d.</strong> Repeats until no more function calls or 3 rounds exhausted.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">8</span>
+      <div class="step-body">
+        <strong>Parse OPTIONS from response</strong>
+        <p><span class="file-ref">app/orchestrator.py</span> <code>display_text, suggested_options = _parse_options(response_text)</code></p>
+        <p>Uses regex <code>\n?OPTIONS:\s*(.+?)$</code> to extract pipe-separated options from the end of the response. Strips the OPTIONS line from display text.</p>
+        <div class="data-box">Input:  "Winter dries hair out. Try a leave-in!\nOPTIONS: Tell me more|How do I use it?|Show me other products"
+Output: display_text = "Winter dries hair out. Try a leave-in!"
+        options = ["Tell me more", "How do I use it?", "Show me other products"]</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">9</span>
+      <div class="step-body">
+        <strong>Return response to UI</strong>
+        <p><span class="file-ref">app/main.py</span> returns <code>ChatResponse(response, session_id, history, suggested_options)</code>.</p>
+        <p><span class="file-ref">scripts/demo_ui.py</span> stores updated <code>api_history</code> and <code>suggested_options</code> in session state. Renders the response with <code>render_message_with_videos()</code> (extracts YouTube URLs for inline video embeds). Renders option buttons if any.</p>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2>Flow 2 &mdash; Photo Upload</h2>
+<!-- ============================================================ -->
+
+<div class="flow-section photo">
+  <span class="flow-label photo">Photo Upload</span>
+
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <strong>User uploads image via chat input</strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> <code>st.chat_input(accept_file=True, file_type=["jpg","jpeg","png","webp","heic"])</code></p>
+        <p>Image bytes are read from the <code>UploadedFile</code> object. Displayed in the chat as a preview (<code>st.image(image_bytes, width=300)</code>).</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <strong>HTTP POST to <code>/photo/analyze</code></strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> sends multipart form: <code>httpx.post(API_URL + "/photo/analyze", files={"file": (name, bytes, mime_type)})</code></p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <strong>FastAPI validates and classifies</strong>
+        <p><span class="file-ref">app/main.py</span> <code>analyze_photo(file: UploadFile)</code></p>
+        <p>Validates: content_type in {image/jpeg, image/png, image/webp, image/heic}, size &le; 10 MB.</p>
+        <p>Calls: <code>classification = await classify_hair_photo(image_bytes, file.content_type)</code></p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <strong>Gemini 2.5 Flash multimodal classification</strong>
+        <p><span class="file-ref">app/llm.py</span> <code>classify_hair_photo(image_bytes, mime_type)</code></p>
+        <p>Sends the image + classification prompt to Gemini with structured JSON output schema:</p>
+        <div class="data-box">config = GenerateContentConfig(
+    response_mime_type = "application/json",
+    response_schema = HAIR_CLASSIFICATION_SCHEMA,
+    max_output_tokens = 512,
+    thinking_config = ThinkingConfig(thinking_budget=0)
+)
+
+contents = Content(role="user", parts=[
+    Part.from_bytes(data=image_bytes, mime_type=mime_type),   # the photo
+    Part.from_text(text=CLASSIFY_PROMPT)                       # instructions
+])
+
+model = "gemini-2.5-flash"</div>
+        <p><strong>Classification schema fields:</strong></p>
+        <table class="config-table" style="margin:0.3rem 0">
+          <tr><th>Field</th><th>Type</th><th>Possible values</th></tr>
+          <tr><td>hair_pattern</td><td>STRING</td><td>straight, wavy, curly, coily, unable_to_determine</td></tr>
+          <tr><td>hair_pattern_code</td><td>STRING</td><td>1a&ndash;4c, unknown</td></tr>
+          <tr><td>frizz_level</td><td>STRING</td><td>none, mild, moderate, severe</td></tr>
+          <tr><td>damage_signs</td><td>STRING</td><td>none, mild, moderate, severe</td></tr>
+          <tr><td>length</td><td>STRING</td><td>short, medium, long, very_long</td></tr>
+          <tr><td>confidence</td><td>STRING</td><td>high, medium, low</td></tr>
+          <tr><td>notes</td><td>STRING</td><td>free text</td></tr>
+        </table>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">5</span>
+      <div class="step-body">
+        <strong>Format classification into human-readable summary</strong>
+        <p><span class="file-ref">app/llm.py</span> <code>format_classification_summary(classification)</code></p>
+        <div class="data-box">Example output:
+"Based on your photo, you have wavy hair (around 2B), mild frizz, medium length.
+(Note: I'm not very confident in this assessment...)"</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">6</span>
+      <div class="step-body">
+        <strong>Return classification + summary to UI</strong>
+        <p><span class="file-ref">app/main.py</span> returns <code>PhotoAnalysisResponse(classification=dict, summary=str)</code>.</p>
+        <p><span class="file-ref">scripts/demo_ui.py</span> stores classification and summary in <code>st.session_state.hair_context</code>.</p>
+      </div>
+    </li>
+
+    <div class="section-connector">&darr;&darr;&darr; <span style="font-size:0.8rem;">photo summary is now injected into the chat flow</span> &darr;&darr;&darr;</div>
+
+    <li class="step">
+      <span class="step-num">7</span>
+      <div class="step-body">
+        <strong>UI constructs enriched message and sends to <code>/chat</code></strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span></p>
+        <div class="data-box">actual_message = "[User uploaded a hair photo. Analysis: {summary}]\n\n"
+                 + "Please respond to this hair analysis naturally."
+                 + "\n\nThe user also said: {user_text}"   # if user typed text with photo</div>
+        <p>This then follows the <strong>exact same flow as a text message</strong> (Flow 1, steps 2&ndash;9): POST /chat &rarr; orchestrator &rarr; retrieval &rarr; Gemini &rarr; tool calls &rarr; OPTIONS &rarr; response.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">8</span>
+      <div class="step-body">
+        <strong>Subsequent messages carry photo context</strong>
+        <p>On future text messages, if <code>hair_context</code> exists in session state and hasn't been injected into api_history yet, the UI prepends the summary:</p>
+        <div class="data-box">actual_message = "[Hair photo analysis: {summary}]\n\n{user_text}"</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2>Flow 3 &mdash; Suggested Option Click</h2>
+<!-- ============================================================ -->
+
+<div class="flow-section option">
+  <span class="flow-label option">Option Click</span>
+
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <strong>User clicks a suggested option button</strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> &mdash; Options are rendered as Streamlit buttons from <code>st.session_state.suggested_options</code>.</p>
+        <div class="data-box"># Button rendering
+cols = st.columns(min(len(suggested_options), 3))
+for i, option in enumerate(suggested_options):
+    if col.button(option, ...):
+        st.session_state.suggested_options = []
+        st.session_state._pending = option     # set the option text as pending input
+        st.rerun()                              # trigger rerun</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <strong>Pending option becomes the prompt</strong>
+        <p>On the next Streamlit rerun cycle, <code>pending = st.session_state.pop("_pending", None)</code> retrieves the option text and assigns it to <code>prompt</code>.</p>
+        <p>The option text (e.g., "Recommend a routine") is used as the user message, <strong>exactly like typed text</strong>.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <strong>Follows text message flow (Flow 1, steps 2&ndash;9)</strong>
+        <p>The option text goes through POST /chat &rarr; orchestrator &rarr; retrieval &rarr; Gemini &rarr; tool calls &rarr; OPTIONS &rarr; response, identical to a regular text message.</p>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2>Flow 4 &mdash; Video Content in Responses</h2>
+<!-- ============================================================ -->
+
+<div class="flow-section video">
+  <span class="flow-label video">Video Content</span>
+
+  <h3>How video tutorials get into the knowledge base</h3>
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <strong>Video metadata defined in catalogue</strong>
+        <p><span class="file-ref">data/videos.py</span> &mdash; <code>VIDEO_CATALOGUE</code> is a hardcoded list of 9 <code>VideoMeta</code> dataclass objects. Each has: title, drive_id, description, products, routines, hair_types, topic_tags, and optional public_url (YouTube).</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <strong>Chunk generation</strong>
+        <p><span class="file-ref">data/videos.py</span> <code>generate_video_chunks()</code> creates one KB chunk per video with content that includes the title, description, URL (<code>best_url</code> prefers YouTube over Drive), featured products, routine IDs, and applicable hair types.</p>
+        <div class="data-box">Example chunk content:
+"Tutorial video: Wavy Hair Routine Tutorial
+Complete 4-step Moxie wavy hair routine: shampoo, condition, leave-in...
+Watch here: https://drive.google.com/file/d/.../view
+Products featured: gentle-cleansing-shampoo, ultra-hydrating-conditioner, ...
+Routine: wavy_full
+Best for hair types: 2a, 2b, 2c"</div>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <strong>Ingestion into kb_chunks</strong>
+        <p><span class="file-ref">scripts/ingest.py</span> loads video chunks from <code>video_chunks.json</code> (pre-generated JSON) alongside CX handbook chunks, hair type CSV chunks, and product CSV chunks. All chunks are embedded via <code>embed_batch()</code> (text-embedding-005, 768d) and inserted into the <code>kb_chunks</code> table with <code>source_type = "video_tutorial"</code>.</p>
+      </div>
+    </li>
+  </ol>
+
+  <h3>How video URLs appear in chat responses</h3>
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <strong>Retrieval surfaces video chunks</strong>
+        <p>When a user asks "how do I use the curl cream?" or "show me the wavy routine", the hybrid search (Flow 1, step 4) can match video tutorial chunks via both vector similarity and FTS. The chunk content (including the video URL) is included in the system prompt's knowledge base section.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">5</span>
+      <div class="step-body">
+        <strong>Gemini includes video URL in response</strong>
+        <p>The system prompt instructs: "Share tutorial links from the knowledge base only when they genuinely add value." Gemini may include YouTube or Drive URLs in its response text.</p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step-num">6</span>
+      <div class="step-body">
+        <strong>UI renders YouTube embeds inline</strong>
+        <p><span class="file-ref">scripts/demo_ui.py</span> <code>render_message_with_videos(text)</code></p>
+        <p>Uses regex to detect YouTube URLs in the response text:</p>
+        <div class="data-box"># Regex patterns:
+_MD_YT_LINK = re.compile(r"\[([^\]]*)\]\((https?://...youtube...)\)")  # markdown links
+_YT_RE = re.compile(r"(https?://...youtube.com/...([\w-]{11}))")         # plain URLs
+
+# Processing:
+1. Strip markdown link syntax: "[Watch here](https://youtube...)" -> "Watch here: https://youtube..."
+2. Split text on YouTube URL matches
+3. For each YouTube video ID found: st.video(f"https://www.youtube.com/watch?v={video_id}")
+4. Surrounding text rendered as st.markdown()</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2>Data Sources Ingested into kb_chunks</h2>
+<!-- ============================================================ -->
+
+<table class="config-table">
+  <tr><th>Source</th><th>File</th><th>source_type</th><th>Description</th></tr>
+  <tr><td>CX Handbook</td><td><code>data/cx_handbook_chunks.json</code></td><td>cx_handbook</td><td>Customer experience handbook content (FAQ, policies, brand voice)</td></tr>
+  <tr><td>Video Tutorials</td><td><code>data/video_chunks.json</code></td><td>video_tutorial</td><td>9 tutorial videos with metadata, URLs, product/routine mappings</td></tr>
+  <tr><td>Hair Type Sheet</td><td><code>data/Hair type and product recommendations - Sheet1.csv</code></td><td>hair_type</td><td>Hair type classification guide with product recommendations per type</td></tr>
+  <tr><td>Products CSV</td><td><code>data/products_export.csv</code></td><td>product</td><td>Full Shopify product catalog; also generates <code>product_catalog.json</code></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Database Schema (relevant tables)</h2>
+<!-- ============================================================ -->
+
+<div class="data-box">-- Core retrieval table
+kb_chunks (
+  id BIGSERIAL PK, content TEXT, embedding VECTOR(768),
+  content_tsv TSVECTOR (auto-generated from content),
+  source_type TEXT, source_url TEXT, source_id TEXT, chunk_type TEXT,
+  topic_tags TEXT[], product_refs TEXT[], hair_types TEXT[],
+  version INT, is_active BOOLEAN, last_updated TIMESTAMPTZ, metadata JSONB
+)
+
+-- Indexes:
+  kb_chunks_embedding_idx   HNSW (vector_cosine_ops)
+  kb_chunks_tsv_idx         GIN  (content_tsv)
+  kb_chunks_tags_idx        GIN  (topic_tags)
+  kb_chunks_products_idx    GIN  (product_refs)
+  kb_chunks_active_type_idx B-tree (is_active, source_type)
+
+-- Session tracking (defined but not used in demo flow)
+conversations (id UUID PK, session_id, customer_id, channel, ...)
+messages (id BIGSERIAL PK, conversation_id FK, role, content, tool_calls, model, tokens, latency, ...)
+message_feedback (message_id FK, rating, reason)</div>
+
+<!-- ============================================================ -->
+<h2>End-to-End Sequence Summary</h2>
+<!-- ============================================================ -->
+
+<div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.5rem 2rem;margin:1.5rem 0;font-size:0.9rem;">
+<pre style="margin:0;white-space:pre-wrap;font-family:'SFMono-Regular',Consolas,monospace;line-height:1.8;">
+<strong>TEXT MESSAGE</strong>
+  User types text
+    |
+  [UI] Prepend hair_context summary if exists
+    |
+  [UI] POST /chat {message, history}
+    |
+  [main.py] chat_endpoint() -> orchestrator.chat()
+    |
+  [orchestrator.py] retrieve(user_message, top_k=5)
+    |
+  [retrieval.py] embed([query]) -> text-embedding-005 (768d)
+    |
+  [retrieval.py] SQL: vec CTE (top-30 cosine) LEFT JOIN fts CTE (top-30 ts_rank)
+    |               -> hybrid score = vec*0.7 + fts*0.3 -> top 5
+    |
+  [retrieval.py] format_retrieval_context() -> "[Type] content\n---\n..."
+    |
+  [prompts.py] build_system_prompt(context) -> SYSTEM_PROMPT + knowledge section
+    |
+  [orchestrator.py] Gemini 2.5 Flash (temp=0.7, max_tokens=1024, tools, thinking=0)
+    |
+  [orchestrator.py] Tool-call loop (up to 3 rounds):
+    |   -> recommend_routine() or get_product()
+    |   -> append tool results, call Gemini again
+    |
+  [orchestrator.py] _parse_options() -> split display_text / OPTIONS
+    |
+  [main.py] return ChatResponse {response, session_id, history, suggested_options}
+    |
+  [UI] render_message_with_videos() + option buttons
+
+
+<strong>PHOTO UPLOAD</strong>
+  User uploads image
+    |
+  [UI] POST /photo/analyze (multipart)
+    |
+  [main.py] validate type/size -> classify_hair_photo()
+    |
+  [llm.py] Gemini 2.5 Flash multimodal (image + prompt -> structured JSON)
+    |          -> {hair_pattern, hair_pattern_code, frizz_level, damage_signs, length, confidence, notes}
+    |
+  [llm.py] format_classification_summary() -> human-readable string
+    |
+  [main.py] return PhotoAnalysisResponse {classification, summary}
+    |
+  [UI] Store in hair_context, construct enriched message
+    |
+  [UI] POST /chat with "[User uploaded a hair photo. Analysis: {summary}]..."
+    |
+  ... same as TEXT MESSAGE flow from step 3 onward ...
+
+
+<strong>OPTION CLICK</strong>
+  User clicks option button
+    |
+  [UI] st.session_state._pending = option_text -> st.rerun()
+    |
+  [UI] pending becomes prompt
+    |
+  ... same as TEXT MESSAGE flow ...
+</pre>
+</div>
+
+<p style="color:#6c757d;font-size:0.82rem;margin-top:2rem;text-align:center;">
+  Generated for MoxieBuddy / HairGPT &mdash; based on codebase at commit 98d3e8b
+</p>
+
+</div>
+</body>
+</html>

@@ -9,4 +9,4 @@ from app.config import settings
 def get_secret(secret_id: str, version: str = "latest") -> str:
     client = secretmanager.SecretManagerServiceClient()
     name = f"projects/{settings.gcp_project_id}/secrets/{secret_id}/versions/{version}"
-    return client.access_secret_version(name=name).payload.data.decode("utf-8")
+    return client.access_secret_version(name=name).payload.data.decode("utf-8").strip()

@@ -56,10 +56,10 @@ async def retrieve(query: str, top_k: int = 5) -> list[RetrievedChunk]:
             id=r["id"],
             content=r["content"],
             chunk_type=r["chunk_type"],
-            source_id=r["source_id"],
-            product_refs=list(r["product_refs"]),
-            hair_types=list(r["hair_types"]),
-            score=float(r["score"]),
+            source_id=r["source_id"] or "",
+            product_refs=list(r["product_refs"] or []),
+            hair_types=list(r["hair_types"] or []),
+            score=float(r["score"] or 0),
         )
         for r in rows
     ]

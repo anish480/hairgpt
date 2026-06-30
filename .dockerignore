@@ -1,0 +1,13 @@
+.git
+.env
+__pycache__
+*.pyc
+.venv
+backend/.venv
+backend/scripts
+design/
+docs/
+data/refinements.txt
+*.backup.js
+*.design-locked.js
+shopify-widget/preview.html

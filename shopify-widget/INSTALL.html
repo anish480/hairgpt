@@ -1,0 +1,57 @@
+<!--
+  MoxieBuddy Chat Widget — Shopify Installation Snippet
+  =====================================================
+
+  Add this block just before </body> in your Shopify theme's theme.liquid file.
+
+  For the dev store (moxie-dev-store-soqsybgm.myshopify.com):
+    1. Go to Online Store > Themes > Edit code
+    2. Open layout/theme.liquid
+    3. Paste this snippet just before the closing </body> tag
+    4. Save
+
+  For production, change the apiBaseUrl to "https://chat.moxiebeauty.in"
+  and host the JS file on a CDN or Shopify's asset pipeline.
+-->
+
+<!-- ==================== COPY FROM HERE ==================== -->
+
+<!-- MoxieBuddy Chat Widget Configuration -->
+<script>
+  window.MoxieBuddyConfig = {
+    // DEV: point to local FastAPI backend
+    apiBaseUrl: "http://localhost:8000",
+
+    // PROD: uncomment this line and comment out the one above
+    // apiBaseUrl: "https://chat.moxiebeauty.in",
+
+    // Shopify page context (populated from Liquid template variables)
+    shopContext: {
+      pageType:      "{{ request.page_type }}",
+      productHandle: "{{ product.handle | default: '' }}",
+      collectionHandle: "{{ collection.handle | default: '' }}",
+      customerId:    "{{ customer.id | default: '' }}",
+      customerEmail: "{{ customer.email | default: '' }}",
+      shopDomain:    "{{ shop.domain }}"
+    }
+  };
+</script>
+
+<!-- MoxieBuddy Chat Widget Script -->
+<!-- Option A: Inline (for quick POC testing — paste moxiebuddy-widget.js contents directly) -->
+<!-- <script> ...paste contents of moxiebuddy-widget.js here... </script> -->
+
+<!-- Option B: External file (upload moxiebuddy-widget.js to Shopify Assets or a CDN) -->
+<!--
+  To use Shopify Assets:
+    1. Go to Online Store > Themes > Edit code
+    2. Under Assets, click "Add a new asset"
+    3. Upload moxiebuddy-widget.js
+    4. Reference it like this:
+-->
+<!-- <script src="{{ 'moxiebuddy-widget.js' | asset_url }}" defer></script> -->
+
+<!-- Option C: External CDN / Cloud Storage URL -->
+<!-- <script src="https://storage.googleapis.com/your-bucket/moxiebuddy-widget.js" defer></script> -->
+
+<!-- ==================== COPY TO HERE ==================== -->
