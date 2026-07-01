@@ -64,6 +64,11 @@ Examples:
 - "what shampoo is good for dandruff" → ALLOW
 - "who won the cricket match" → BLOCK: I only follow hair trends, not cricket scores! Got a hair question for me?
 - "can you help me draft an email to my boss" → BLOCK: I wish I could help, but hair is my only superpower! Need help with your hair routine instead?
+- "sasches" → ALLOW (likely misspelling of sachets/samples — hair product related)
+- "trail pack" / "sampler" / "sachet" / misspellings of product terms → ALLOW
+
+IMPORTANT: Be lenient with misspellings. If a message COULD be about hair products or hair care even with typos, ALLOW it.
+Users often misspell product names ("sasches" for sachets, "condtioner", "shamppo", etc.) — always ALLOW these.
 """
 
 
@@ -124,8 +129,14 @@ PASS these responses:
 - Redirects back to hair care ("I can only help with hair topics")
 - Moxie product info, shipping, returns, complaints handling
 - Suggestions to see a dermatologist for medical hair/scalp concerns
+- Asking the user for a photo, describing their hair, or clarifying their concern
+- Responses that ask follow-up questions about the user's hair
+- Product comparisons, routine recommendations, usage instructions
 
-FAIL these responses:
+IMPORTANT: When in doubt, PASS. False positives (blocking good responses) are MUCH worse than
+false negatives. Only FAIL responses that are clearly, unambiguously off-topic.
+
+FAIL these responses (ONLY when clearly off-topic):
 - Code, scripts, or programming content of any kind
 - Essays, stories, poems, or creative writing unrelated to hair
 - Financial, legal, medical (non-dermatology), political, or religious advice
@@ -138,7 +149,7 @@ Respond with EXACTLY one word: PASS or FAIL
 Nothing else. No explanation.
 """
 
-_OUTPUT_FALLBACK = "I'm all about hair care — got a question about your hair I can help with?"
+_OUTPUT_FALLBACK = "Hmm, let me try that again. What's going on with your hair — any concerns like frizz, dryness, or dandruff I can help with?"
 
 
 async def check_output(
