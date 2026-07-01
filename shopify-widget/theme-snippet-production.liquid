@@ -1,0 +1,24 @@
+<!-- HairGPT Chat Widget — Production Snippet
+     Paste this before </body> in layout/theme.liquid
+-->
+
+<script>
+(function() {
+  window.MoxieBuddyConfig = {
+    apiBaseUrl: "https://hairgpt-preview-586722022195.asia-south1.run.app",
+    shopContext: {
+      pageType:         "{{ request.page_type }}",
+      productHandle:    "{{ product.handle | default: '' }}",
+      collectionHandle: "{{ collection.handle | default: '' }}",
+      customerId:       "{{ customer.id | default: '' }}",
+      customerEmail:    "{{ customer.email | default: '' }}",
+      shopDomain:       "{{ shop.domain }}"
+    }
+  };
+
+  var s = document.createElement("script");
+  s.src = "https://hairgpt-preview-586722022195.asia-south1.run.app/static/moxiebuddy-widget.js";
+  s.defer = true;
+  document.body.appendChild(s);
+})();
+</script>
