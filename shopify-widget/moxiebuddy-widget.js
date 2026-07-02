@@ -1106,7 +1106,7 @@
       state.isOpen = !state.isOpen;
       $("mb-panel").classList.toggle("mb-open", state.isOpen);
       if (state.isOpen) {
-        /* focus removed — let users tap the field intentionally */
+        $("mb-text-input").blur();
       }
     });
 
@@ -1218,6 +1218,13 @@
         if (!cameraBtn.contains(e.target) && !popup.contains(e.target)) {
           popup.classList.remove("mb-popup-open");
         }
+      }
+    });
+
+    // Prevent input focus when tapping non-input areas on home screen
+    $("mb-home-screen").addEventListener("touchstart", function (e) {
+      if (e.target.id !== "mb-text-input") {
+        $("mb-text-input").blur();
       }
     });
 
