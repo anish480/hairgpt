@@ -27,6 +27,8 @@ ALLOWED topics (pass through):
 - Follow-up questions in an ongoing hair conversation
 - Complaints or feedback about Moxie products or service
 - Shipping, returns, orders related to Moxie Beauty
+- Comparisons between Moxie products and competitor brands (FixMyCurls, Curl Up, Ashba, Arata, etc.)
+- Questions about other hair care brands in context of choosing products
 
 BLOCKED topics (reject):
 - Requests to write code, essays, stories, poems, scripts, emails unrelated to hair

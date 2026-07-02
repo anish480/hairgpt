@@ -182,9 +182,10 @@
     #mb-widget{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#2D2D2D;position:fixed;bottom:20px;right:20px;z-index:999999;}
 
     /* === Floating Bubble === */
-    #mb-bubble{width:64px;height:64px;border-radius:16px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none;transition:transform .2s ease,box-shadow .2s ease;padding:0;overflow:hidden;}
+    #mb-bubble{width:64px;height:64px;border-radius:16px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none;transition:transform .2s ease,box-shadow .2s ease;padding:0;overflow:hidden;animation:mb-bubble-entrance 0.6s ease 2s both;}
     #mb-bubble:hover{transform:scale(1.05);box-shadow:0 4px 16px rgba(0,0,0,0.18);}
     #mb-bubble img{width:64px;height:64px;border-radius:16px;object-fit:cover;}
+    @keyframes mb-bubble-entrance{0%{transform:scale(0) translateY(20px);opacity:0;}60%{transform:scale(1.15) translateY(-4px);opacity:1;}100%{transform:scale(1) translateY(0);opacity:1;}}
 
     /* === Panel === */
     #mb-panel{display:flex;flex-direction:column;width:337.5px;height:600px;max-height:calc(100vh - 100px);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;position:fixed;bottom:90px;right:20px;z-index:999999;background-color:#FAFFF8;background-image:url(` + BACKGROUND_IMG + `);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transform:scale(0.4) translateY(20px);transform-origin:bottom right;pointer-events:none;transition:opacity .25s ease,transform .25s cubic-bezier(.175,.885,.32,1.275);}
@@ -261,7 +262,7 @@
 
     /* === Input Bar (shared between home + chat) === */
     #mb-input-bar{display:flex;align-items:center;gap:6px;padding:10px 16px;flex-shrink:0;position:relative;z-index:2;}
-    #mb-text-input{flex:1;border:1px solid #E0E0E0;border-radius:18px;padding:9px 14px;font-size:14px;outline:none;resize:none;max-height:80px;min-height:37px;font-family:inherit;line-height:1.35;transition:border-color .15s;background:#fff;}
+    #mb-text-input{flex:1;border:1px solid #E0E0E0;border-radius:18px;padding:9px 14px;font-size:16px;outline:none;resize:none;max-height:80px;min-height:37px;font-family:inherit;line-height:1.35;transition:border-color .15s;background:#fff;}
     #mb-text-input:focus{border-color:#7EC8B7;}
     #mb-text-input::placeholder{color:#9E9E9E;font-size:14px;}
     #mb-camera-btn{width:28px;height:28px;border-radius:50%;cursor:pointer;background:none;border:none;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
@@ -468,7 +469,9 @@
       requestAnimationFrame(function () {
         var containerRect = el.getBoundingClientRect();
         var targetRect = target.getBoundingClientRect();
-        el.scrollTop += targetRect.top - containerRect.top - 8;
+        var viewportOffset = containerRect.height * 0.4;
+        var desiredScrollTop = el.scrollTop + (targetRect.top - containerRect.top) - viewportOffset;
+        el.scrollTo({ top: Math.max(0, desiredScrollTop), behavior: "smooth" });
       });
     }
   }
@@ -595,7 +598,7 @@
     if (home) home.classList.add("mb-hidden");
     if (chatArea) chatArea.classList.add("mb-active");
     scrollToBottom();
-    $("mb-text-input").focus();
+    /* focus removed — let users tap the field intentionally */
   }
 
   function switchToHome() {
@@ -1103,7 +1106,7 @@
       state.isOpen = !state.isOpen;
       $("mb-panel").classList.toggle("mb-open", state.isOpen);
       if (state.isOpen) {
-        $("mb-text-input").focus();
+        /* focus removed — let users tap the field intentionally */
       }
     });
 
