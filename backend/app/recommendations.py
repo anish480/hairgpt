@@ -117,27 +117,34 @@ def recommend_routine(
     is_colored: bool = False,
     has_scalp_concern: bool = False,
 ) -> dict:
-    """Build a personalised step-by-step routine by composing product lines."""
+    """Build a personalised step-by-step routine by composing product lines.
+
+    Phase 1 (steps 1-2): Wash — chosen by hair CONCERN (scalp, dryness/frizz, damage).
+    Phase 2 (steps 3-4): Style — optional, chosen by hair TEXTURE (curly, wavy, straight).
+    """
 
     needs_repair = is_chemically_treated or is_colored
     is_straight = formation == "straight"
     is_wavy = formation == "wavy"
     is_curly = formation == "curly"
-    is_fine = texture == "fine"
 
     steps: list[dict] = []
     routine_names: list[str] = []
     reasoning: list[str] = []
 
-    # --- Phase 1: Wash ---
+    concern_needs_hydration = primary_concern in (
+        "frizz_control", "dryness", "damage_repair",
+    ) or has_frizz or needs_repair
+
+    # --- Phase 1: Wash (from concern) ---
     if has_scalp_concern:
         routine_names.append("ScalpSOS")
         reasoning.append("Scalp concern detected — starting with the ScalpSOS wash to treat dandruff and irritation.")
         for handle, name, desc in WASH_SCALP:
             steps.append(_product_info(handle, desc))
-    elif needs_repair or primary_concern == "damage_repair":
+    elif concern_needs_hydration:
         routine_names.append("HydroRepair")
-        reasoning.append("Your hair needs repair — the HydroRepair wash will rebuild moisture and strength.")
+        reasoning.append("Your hair needs deep hydration — the HydroRepair wash replenishes moisture and strengthens from within.")
         for handle, name, desc in WASH_HYDROREPAIR:
             steps.append(_product_info(handle, desc))
     else:
@@ -146,22 +153,15 @@ def recommend_routine(
         for handle, name, desc in WASH_GENTLE:
             steps.append(_product_info(handle, desc))
 
-    # --- Phase 2: Style / Treat ---
-    wants_definition = primary_concern in ("wave_definition", "curl_definition", "style")
-
-    if is_curly or (is_wavy and hair_type in ("2C",) and wants_definition):
+    # --- Phase 2: Style / Treat (from texture, optional) ---
+    if is_curly or (is_wavy and hair_type in ("2C",)):
         routine_names.append("Curly Vibe Setter")
         reasoning.append("Adding curl cream + serum gel to define and hold your natural curl pattern.")
         for handle, name, desc in STYLE_CURLY:
             steps.append(_product_info(handle, desc))
-    elif is_wavy and wants_definition:
+    elif is_wavy:
         routine_names.append("Wavy Vibe Setter")
         reasoning.append("Adding leave-in + serum gel to enhance and hold your wave pattern.")
-        for handle, name, desc in STYLE_WAVY:
-            steps.append(_product_info(handle, desc))
-    elif is_wavy and (has_frizz or primary_concern == "frizz_control"):
-        routine_names.append("Wavy Vibe Setter")
-        reasoning.append("Leave-in + serum gel combo — handles frizz while enhancing your waves. The Frizz Fighting Serum isn't suitable for wavy hair routines.")
         for handle, name, desc in STYLE_WAVY:
             steps.append(_product_info(handle, desc))
     elif is_straight and (has_frizz or primary_concern == "frizz_control"):
@@ -169,32 +169,20 @@ def recommend_routine(
         reasoning.append("Frizz Fighting Serum on damp hair — deeply hydrates without weighing your hair down.")
         for handle, name, desc in TREAT_FRIZZ:
             steps.append(_product_info(handle, desc))
-    elif primary_concern == "damage_repair":
+    elif is_straight and concern_needs_hydration:
         routine_names.append("HydroRepair Boost")
-        reasoning.append("Your hair needs repair — adding the HA serum to deeply hydrate and protect against further damage.")
+        reasoning.append("Adding the HA serum to seal in repair benefits and protect against further damage.")
         for handle, name, desc in TREAT_HYDROREPAIR_SERUM:
             steps.append(_product_info(handle, desc))
-    elif needs_repair and not has_scalp_concern:
-        if not any("Vibe Setter" in n for n in routine_names):
-            reasoning.append("Adding the HA serum to seal in repair benefits and protect against further damage.")
-            for handle, name, desc in TREAT_HYDROREPAIR_SERUM:
-                steps.append(_product_info(handle, desc))
 
-    # --- Phase 3: Scalp add-on (if scalp concern + other needs) ---
+    # --- Scalp add-on (if scalp concern + textured hair) ---
     if has_scalp_concern and not is_straight:
-        reasoning.append("Adding a daily scalp serum to keep irritation in check between washes.")
+        reasoning.append("Optional add-on: a daily scalp serum to keep irritation in check between washes.")
         for handle, name, desc in TREAT_SCALP_SERUM:
-            steps.append(_product_info(handle, desc))
+            info = _product_info(handle, desc)
+            info["optional"] = True
+            steps.append(info)
 
-    # --- Fallback: if only wash and no treat/style was added ---
-    if len(steps) <= 2 and not has_scalp_concern:
-        if has_frizz and is_straight:
-            routine_names.append("Ditch the Frizz")
-            reasoning.append("Adding frizz serum on damp hair for that extra smoothness.")
-            for handle, name, desc in TREAT_FRIZZ:
-                steps.append(_product_info(handle, desc))
-
-    # Number the steps
     for i, step in enumerate(steps):
         step["step"] = i + 1
 

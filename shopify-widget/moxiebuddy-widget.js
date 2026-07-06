@@ -19,10 +19,32 @@
 
   var STORAGE_KEY = "moxiebuddy_session";
 
+  function _getGASessionId() {
+    try {
+      var cookies = document.cookie.split("; ");
+      for (var i = 0; i < cookies.length; i++) {
+        if (cookies[i].indexOf("_ga_") === 0 && cookies[i].indexOf("=") > 0) {
+          var val = cookies[i].split("=").slice(1).join("=");
+          var parts = val.split(".");
+          if (parts.length >= 3) return parts[2];
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
   function loadSession() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        var saved = JSON.parse(raw);
+        var currentGA = _getGASessionId();
+        if (currentGA && saved.gaSessionId && saved.gaSessionId !== currentGA) {
+          localStorage.removeItem(STORAGE_KEY);
+          return { sessionId: "", history: [], messages: [], hairContext: null, lastRoutine: null };
+        }
+        return saved;
+      }
     } catch (_) {}
     return { sessionId: "", history: [], messages: [], hairContext: null, lastRoutine: null };
   }
@@ -37,6 +59,7 @@
           messages: state.messages,
           hairContext: state.hairContext,
           lastRoutine: state.lastRoutine || null,
+          gaSessionId: _getGASessionId() || state.gaSessionId || null,
         })
       );
     } catch (_) {}
@@ -469,7 +492,7 @@
       requestAnimationFrame(function () {
         var containerRect = el.getBoundingClientRect();
         var targetRect = target.getBoundingClientRect();
-        var viewportOffset = containerRect.height * 0.4;
+        var viewportOffset = containerRect.height * 0.1;
         var desiredScrollTop = el.scrollTop + (targetRect.top - containerRect.top) - viewportOffset;
         el.scrollTo({ top: Math.max(0, desiredScrollTop), behavior: "smooth" });
       });
@@ -947,8 +970,11 @@
     addMessageToDOM("bot", renderBotMessage(answer));
 
     if (data.routine && data.routine.steps && data.routine.steps.length > 0) {
+      var isNewRoutine = !state.lastRoutine || data.routine.routine !== state.lastRoutine.routine;
       state.lastRoutine = data.routine;
-      renderRoutineTiles(data.routine);
+      if (isNewRoutine) {
+        renderRoutineTiles(data.routine);
+      }
     }
 
     renderOptions(state.suggestedOptions);

@@ -230,6 +230,8 @@ async def chat(
 
     display_text, suggested_options = _parse_options(response_text)
 
+    display_text = _inject_missing_video_url(display_text, chunks)
+
     is_safe, sanitized = await check_output(display_text, user_message)
     if not is_safe:
         display_text = sanitized
@@ -241,6 +243,25 @@ async def chat(
     ]
 
     return display_text, updated_history, suggested_options, routine_data, output_tokens
+
+
+_YT_URL_RE = re.compile(r"https?://(?:www\.)?(?:youtube\.com/(?:shorts/|watch\?v=)|youtu\.be/)[\w-]{11}")
+
+
+def _inject_missing_video_url(text: str, chunks: list) -> str:
+    """If the model mentions a tutorial but forgot the YouTube URL, append it from retrieval."""
+    text_lower = text.lower()
+    mentions_video = any(w in text_lower for w in ("tutorial", "watch here", "watch it", "video"))
+    if not mentions_video:
+        return text
+    if _YT_URL_RE.search(text):
+        return text
+    for chunk in chunks:
+        if chunk.chunk_type == "video_tutorial":
+            match = _YT_URL_RE.search(chunk.content)
+            if match:
+                return text.rstrip() + "\n\n" + match.group(0)
+    return text
 
 
 def _parse_options(text: str) -> tuple[str, list[str]]:

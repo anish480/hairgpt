@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel, Field
 
@@ -37,6 +38,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(title="MoxieBuddy Backend", version="0.0.1", lifespan=lifespan)
 
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -160,7 +162,8 @@ async def static_file(filename: str):
     path = STATIC_DIR / filename
     if not path.exists() or not path.is_file():
         raise HTTPException(404, "Not found")
-    return FileResponse(path)
+    headers = {"Cache-Control": "public, max-age=300"}
+    return FileResponse(path, headers=headers)
 
 
 PREVIEW_HTML = """\
