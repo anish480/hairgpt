@@ -72,6 +72,26 @@
   state.suggestedOptions = [];
   state.isOpen = false;
 
+  /* ───────────────────────── Exit-intent state ───────────────────────── */
+
+  var _exitIntentFired = false;
+  var _userOpenedWidget = false;
+  var _mobileIdleTimer = null;
+  var EXIT_STORAGE_KEY = "moxiebuddy_exit_fired";
+  try { _exitIntentFired = sessionStorage.getItem(EXIT_STORAGE_KEY) === "1"; } catch (_) {}
+
+  function isMobileViewport() { return (window.innerWidth || 0) <= 440; }
+
+  function shouldFireExitIntent() {
+    return !_exitIntentFired && !_userOpenedWidget && !state.isOpen
+      && !(state.messages && state.messages.length > 0);
+  }
+
+  function markExitIntentFired() {
+    _exitIntentFired = true;
+    try { sessionStorage.setItem(EXIT_STORAGE_KEY, "1"); } catch (_) {}
+  }
+
   /* ───────────────────────── Device & Analytics context ───────────────────────── */
 
   function getDeviceInfo() {
@@ -351,6 +371,12 @@
     #mb-cam-retake{width:40px;height:40px;background:rgba(255,255,255,0.2);color:#fff;font-size:18px;}
     #mb-cam-confirm{width:40px;height:40px;background:#7EC8B7;color:#fff;font-size:18px;}
     #mb-cam-flip{width:40px;height:40px;background:rgba(255,255,255,0.2);color:#fff;font-size:16px;}
+
+    /* Exit-intent tooltip (mobile nudge) */
+    #mb-exit-tooltip{display:none;position:absolute;bottom:72px;right:0;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:12px 32px 12px 16px;max-width:220px;font-size:13px;color:#2D2D2D;line-height:1.4;cursor:pointer;z-index:999998;opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease;}
+    #mb-exit-tooltip.mb-tooltip-show{display:block;opacity:1;transform:translateY(0);}
+    #mb-exit-tooltip::after{content:'';position:absolute;bottom:-6px;right:20px;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:2px 2px 4px rgba(0,0,0,0.08);}
+    .mb-tooltip-close{position:absolute;top:4px;right:8px;background:none;border:none;font-size:16px;color:#999;cursor:pointer;padding:2px;line-height:1;}
   `;
 
   /* ───────────────────────── Build DOM ───────────────────────── */
@@ -370,6 +396,14 @@
     bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
     bubble.innerHTML = '<img src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
     container.appendChild(bubble);
+
+    // Exit-intent tooltip (mobile nudge)
+    var exitTooltip = document.createElement("div");
+    exitTooltip.id = "mb-exit-tooltip";
+    exitTooltip.innerHTML =
+      '<button class="mb-tooltip-close" aria-label="Dismiss">&times;</button>' +
+      'Need help finding your perfect hair routine?';
+    container.appendChild(exitTooltip);
 
     // Chat panel
     var panel = document.createElement("div");
@@ -1124,6 +1158,75 @@
     if (btn) btn.addEventListener("click", closeCamera);
   }
 
+  /* ───────────────────────── Exit-intent trigger ───────────────────────── */
+
+  function showExitTooltip() {
+    var tip = $("mb-exit-tooltip");
+    if (!tip) return;
+    // Force reflow so the transition animates from the initial hidden state
+    tip.classList.add("mb-tooltip-show");
+    void tip.offsetWidth;
+    tip.style.opacity = "";
+    tip.style.transform = "";
+
+    var autoDismiss = setTimeout(function () {
+      tip.classList.remove("mb-tooltip-show");
+    }, 8000);
+
+    tip.addEventListener("click", function handler(e) {
+      clearTimeout(autoDismiss);
+      tip.removeEventListener("click", handler);
+      tip.classList.remove("mb-tooltip-show");
+      if (e.target.classList.contains("mb-tooltip-close")) return;
+      state.isOpen = true;
+      $("mb-panel").classList.add("mb-open");
+      _userOpenedWidget = true;
+    });
+  }
+
+  function fireExitIntent() {
+    if (!shouldFireExitIntent()) return;
+    markExitIntentFired();
+    if (isMobileViewport()) {
+      showExitTooltip();
+    } else {
+      state.isOpen = true;
+      $("mb-panel").classList.add("mb-open");
+    }
+  }
+
+  function armDesktopExitIntent() {
+    document.documentElement.addEventListener("mouseleave", function onExit(e) {
+      if (e.clientY > 0) return;
+      document.documentElement.removeEventListener("mouseleave", onExit);
+      fireExitIntent();
+    });
+  }
+
+  function armMobileIdle() {
+    var IDLE_MS = 15000;
+
+    function resetIdle() {
+      if (_mobileIdleTimer) clearTimeout(_mobileIdleTimer);
+      if (_exitIntentFired || _userOpenedWidget) { teardown(); return; }
+      _mobileIdleTimer = setTimeout(function () {
+        fireExitIntent();
+        teardown();
+      }, IDLE_MS);
+    }
+
+    function teardown() {
+      document.removeEventListener("scroll", resetIdle, true);
+      document.removeEventListener("touchstart", resetIdle, true);
+      document.removeEventListener("input", resetIdle, true);
+    }
+
+    document.addEventListener("scroll", resetIdle, true);
+    document.addEventListener("touchstart", resetIdle, true);
+    document.addEventListener("input", resetIdle, true);
+    resetIdle();
+  }
+
   /* ───────────────────────── Event wiring ───────────────────────── */
 
   function wireEvents() {
@@ -1132,6 +1235,9 @@
       state.isOpen = !state.isOpen;
       $("mb-panel").classList.toggle("mb-open", state.isOpen);
       if (state.isOpen) {
+        _userOpenedWidget = true;
+        var tip = $("mb-exit-tooltip");
+        if (tip) tip.classList.remove("mb-tooltip-show");
         $("mb-text-input").blur();
       }
     });
@@ -1276,6 +1382,13 @@
         }
       }
     });
+
+    // Arm exit-intent after bubble entrance animation + grace period
+    setTimeout(function () {
+      if (!shouldFireExitIntent()) return;
+      if (isMobileViewport()) armMobileIdle();
+      else armDesktopExitIntent();
+    }, 3100);
   }
 
   /* ───────────────────────── Init ───────────────────────── */

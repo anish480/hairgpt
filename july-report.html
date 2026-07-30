@@ -1,0 +1,542 @@
+<title>HairGPT — July 2026 Performance</title>
+<style>
+  :root {
+    --bg: #FDFAF6;
+    --surface: #FFFFFF;
+    --surface-alt: #F5F0EA;
+    --border: #E8DFD4;
+    --text: #2C1810;
+    --text-2: #7A6558;
+    --text-3: #A89888;
+    --accent: #C4697A;
+    --accent-soft: rgba(196,105,122,0.12);
+    --sage: #6B8E6B;
+    --sage-soft: rgba(107,142,107,0.12);
+    --taupe: #D4C5B9;
+    --bar: #C4697A;
+    --bar-muted: #E8DFD4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161210;
+      --surface: #221E1B;
+      --surface-alt: #2A2521;
+      --border: #3A332D;
+      --text: #F0EAE4;
+      --text-2: #A89888;
+      --text-3: #7A6558;
+      --accent: #D88A96;
+      --accent-soft: rgba(216,138,150,0.12);
+      --sage: #8BAE8B;
+      --sage-soft: rgba(139,174,139,0.12);
+      --taupe: #4A3F36;
+      --bar: #D88A96;
+      --bar-muted: #3A332D;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161210;
+    --surface: #221E1B;
+    --surface-alt: #2A2521;
+    --border: #3A332D;
+    --text: #F0EAE4;
+    --text-2: #A89888;
+    --text-3: #7A6558;
+    --accent: #D88A96;
+    --accent-soft: rgba(216,138,150,0.12);
+    --sage: #8BAE8B;
+    --sage-soft: rgba(139,174,139,0.12);
+    --taupe: #4A3F36;
+    --bar: #D88A96;
+    --bar-muted: #3A332D;
+  }
+  :root[data-theme="light"] {
+    --bg: #FDFAF6;
+    --surface: #FFFFFF;
+    --surface-alt: #F5F0EA;
+    --border: #E8DFD4;
+    --text: #2C1810;
+    --text-2: #7A6558;
+    --text-3: #A89888;
+    --accent: #C4697A;
+    --accent-soft: rgba(196,105,122,0.12);
+    --sage: #6B8E6B;
+    --sage-soft: rgba(107,142,107,0.12);
+    --taupe: #D4C5B9;
+    --bar: #C4697A;
+    --bar-muted: #E8DFD4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 2rem 1.5rem 4rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .header { margin-bottom: 2.5rem; }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+  .header .period {
+    font-size: 0.8rem;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .stat {
+    background: var(--surface);
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 0.35rem;
+  }
+  .stat-value {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .stat-note {
+    font-size: 0.75rem;
+    color: var(--text-2);
+    margin-top: 0.2rem;
+  }
+  .stat-value .accent { color: var(--accent); }
+  .stat-value .sage { color: var(--sage); }
+
+  .section { margin-bottom: 2.25rem; }
+  .section-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+  }
+  canvas { display: block; width: 100%; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .card-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 1rem;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .bar-label {
+    font-size: 0.8rem;
+    color: var(--text-2);
+    width: 90px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--bar-muted);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--bar);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .bar-count {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+    width: 62px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .device-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .device-row:last-child { border-bottom: none; }
+  .device-name { font-size: 0.85rem; }
+  .device-stat {
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  th:not(:first-child) { text-align: right; }
+  td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  td:not(:first-child) { text-align: right; }
+  tr:last-child td { border-bottom: none; }
+  .pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1em 0.5em;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .pill-accent { background: var(--accent-soft); color: var(--accent); }
+  .pill-sage { background: var(--sage-soft); color: var(--sage); }
+
+  .insight-strip {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-top: 2rem;
+  }
+  .insight-strip h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+  .insight-strip ul {
+    list-style: none;
+    padding: 0;
+  }
+  .insight-strip li {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    padding: 0.35rem 0;
+    padding-left: 1.1rem;
+    position: relative;
+    line-height: 1.45;
+  }
+  .insight-strip li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+</style>
+
+<div class="header">
+  <h1>HairGPT Performance</h1>
+  <div class="period">July 1 – 30, 2026</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat">
+    <div class="stat-label">Total Sessions</div>
+    <div class="stat-value">5,480</div>
+    <div class="stat-note">~183/day average</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Engaged Sessions</div>
+    <div class="stat-value">4,211</div>
+    <div class="stat-note">76.8% sent 2+ messages</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Routines Generated</div>
+    <div class="stat-value"><span class="accent">3,037</span></div>
+    <div class="stat-note">72.1% of engaged sessions</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Photo Uploads</div>
+    <div class="stat-value"><span class="sage">2,013</span></div>
+    <div class="stat-note">36.7% of all sessions</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Median Messages</div>
+    <div class="stat-value">3</div>
+    <div class="stat-note">avg 4.0 · max 42</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Output Tokens</div>
+    <div class="stat-value">2.3M</div>
+    <div class="stat-note">~430 per session</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Daily Sessions</div>
+  <div class="chart-wrap">
+    <canvas id="dailyChart" height="180"></canvas>
+  </div>
+</div>
+
+<div class="two-col section">
+  <div class="card">
+    <div class="card-title">Engagement Depth</div>
+    <div class="bar-row">
+      <span class="bar-label">1 msg</span>
+      <div class="bar-track"><div class="bar-fill" style="width:74.7%"></div></div>
+      <span class="bar-count">1,269</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2–3 msgs</span>
+      <div class="bar-track"><div class="bar-fill" style="width:97.5%"></div></div>
+      <span class="bar-count">1,656</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">4–6 msgs</span>
+      <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+      <span class="bar-count">1,699</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">7–10 msgs</span>
+      <div class="bar-track"><div class="bar-fill" style="width:38%"></div></div>
+      <span class="bar-count">645</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">11+ msgs</span>
+      <div class="bar-track"><div class="bar-fill" style="width:12.4%"></div></div>
+      <span class="bar-count">211</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Platform Mix</div>
+    <div class="device-row">
+      <span class="device-name">Android</span>
+      <span class="device-stat">3,016 · 55.0%</span>
+    </div>
+    <div class="device-row">
+      <span class="device-name">iPhone</span>
+      <span class="device-stat">2,031 · 37.1%</span>
+    </div>
+    <div class="device-row">
+      <span class="device-name">Windows</span>
+      <span class="device-stat">244 · 4.5%</span>
+    </div>
+    <div class="device-row">
+      <span class="device-name">Mac</span>
+      <span class="device-stat">142 · 2.6%</span>
+    </div>
+    <div style="padding-top: 0.75rem; font-size: 0.8rem; color: var(--text-3);">
+      92% mobile · 7% desktop
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Weekly Breakdown</div>
+  <div class="card" style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Week of</th>
+          <th>Sessions</th>
+          <th>Avg Msgs</th>
+          <th>Routines</th>
+          <th>Bounce</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Jun 29</td>
+          <td>787</td>
+          <td>4.3</td>
+          <td>441 <span class="pill pill-accent">56%</span></td>
+          <td>22.5%</td>
+        </tr>
+        <tr>
+          <td>Jul 6</td>
+          <td>1,561</td>
+          <td>4.0</td>
+          <td>886 <span class="pill pill-accent">57%</span></td>
+          <td>22.7%</td>
+        </tr>
+        <tr>
+          <td>Jul 13</td>
+          <td>1,401</td>
+          <td>3.8</td>
+          <td>765 <span class="pill pill-accent">55%</span></td>
+          <td>24.3%</td>
+        </tr>
+        <tr>
+          <td>Jul 20</td>
+          <td>1,152</td>
+          <td>4.0</td>
+          <td>634 <span class="pill pill-accent">55%</span></td>
+          <td>21.8%</td>
+        </tr>
+        <tr>
+          <td>Jul 27</td>
+          <td>579</td>
+          <td>4.0</td>
+          <td>311 <span class="pill pill-sage">54%</span></td>
+          <td>25.0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="insight-strip">
+  <h3>Key Takeaways</h3>
+  <ul>
+    <li><strong>Conversion is strong.</strong> 72.1% of engaged users (2+ messages) reach a routine recommendation — the core funnel is working.</li>
+    <li><strong>Bounce is stable at ~23%.</strong> About 1 in 4 users sends a single message and leaves. Worth investigating what those first messages are — cold openers, test messages, or genuine drop-offs.</li>
+    <li><strong>Peak was early July</strong> (Jul 5–12, 220+ sessions/day). Traffic softened ~18% in the second half, with Jul 22–23 the lowest stretch at 126–135/day.</li>
+    <li><strong>Photo adoption is solid.</strong> 36.7% of sessions include a photo upload, driving richer hair analysis and likely higher-quality routines.</li>
+    <li><strong>Almost entirely mobile.</strong> 92% of sessions come from phones (55% Android, 37% iPhone). Desktop is negligible — widget UX should remain mobile-first.</li>
+    <li><strong>Deep conversations happen.</strong> 856 sessions (15.6%) went 7+ messages — these are likely your most invested users and potential repeat customers.</li>
+  </ul>
+</div>
+
+<script>
+(function() {
+  const daily = [
+    {d:'1',v:81},{d:'2',v:178},{d:'3',v:161},{d:'4',v:144},{d:'5',v:223},
+    {d:'6',v:262},{d:'7',v:183},{d:'8',v:201},{d:'9',v:218},{d:'10',v:220},
+    {d:'11',v:246},{d:'12',v:231},{d:'13',v:196},{d:'14',v:183},{d:'15',v:175},
+    {d:'16',v:197},{d:'17',v:201},{d:'18',v:216},{d:'19',v:233},{d:'20',v:165},
+    {d:'21',v:144},{d:'22',v:135},{d:'23',v:126},{d:'24',v:194},{d:'25',v:181},
+    {d:'26',v:207},{d:'27',v:182},{d:'28',v:159},{d:'29',v:156},{d:'30',v:82}
+  ];
+
+  const canvas = document.getElementById('dailyChart');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  canvas.style.height = '180px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = 180;
+  const pad = { top: 20, right: 16, bottom: 28, left: 40 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const maxV = 280;
+  const barW = Math.min(18, (plotW / daily.length) - 3);
+  const gap = (plotW - barW * daily.length) / (daily.length - 1);
+
+  const style = getComputedStyle(document.documentElement);
+  const barColor = style.getPropertyValue('--bar').trim();
+  const barMuted = style.getPropertyValue('--bar-muted').trim();
+  const textColor3 = style.getPropertyValue('--text-3').trim();
+  const borderColor = style.getPropertyValue('--border').trim();
+
+  // Grid lines
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 0.5;
+  for (let tick = 0; tick <= 280; tick += 70) {
+    const y = pad.top + plotH - (tick / maxV) * plotH;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = textColor3;
+    ctx.font = '10px -apple-system, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(tick, pad.left - 8, y + 3);
+  }
+
+  // Bars
+  daily.forEach((item, i) => {
+    const x = pad.left + i * (barW + gap);
+    const barH = (item.v / maxV) * plotH;
+    const y = pad.top + plotH - barH;
+
+    const isPartial = i === 0 || i === daily.length - 1;
+    ctx.fillStyle = isPartial ? barMuted : barColor;
+    ctx.beginPath();
+    const r = 2;
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + barW - r, y);
+    ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+    ctx.lineTo(x + barW, pad.top + plotH);
+    ctx.lineTo(x, pad.top + plotH);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.fill();
+
+    // Labels every 5 days
+    if ((i + 1) % 5 === 0 || i === 0) {
+      ctx.fillStyle = textColor3;
+      ctx.font = '10px -apple-system, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Jul ' + item.d, x + barW / 2, h - 6);
+    }
+  });
+})();
+</script>
