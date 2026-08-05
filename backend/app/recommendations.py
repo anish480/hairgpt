@@ -133,8 +133,8 @@ def recommend_routine(
     reasoning: list[str] = []
 
     concern_needs_hydration = primary_concern in (
-        "frizz_control", "dryness", "damage_repair",
-    ) or has_frizz or needs_repair
+        "dryness", "damage_repair",
+    ) or needs_repair
 
     # --- Phase 1: Wash (from concern) ---
     if has_scalp_concern:

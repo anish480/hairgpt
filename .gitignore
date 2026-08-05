@@ -45,3 +45,6 @@ extensions/*/dist/
 # Local credential files (should never appear — Secret Manager only)
 credsShopify*
 *.creds
+
+# Reports
+july-report.html
