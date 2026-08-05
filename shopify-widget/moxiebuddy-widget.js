@@ -400,10 +400,7 @@
     var bubble = document.createElement("button");
     bubble.id = "mb-bubble";
     bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
-    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback poster="' + MASCOT_ICON_IMG + '">' +
-      '<source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm">' +
-      '<img src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">' +
-    '</video>';
+    bubble.innerHTML = '<img src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
     container.appendChild(bubble);
 
     // Exit-intent tooltip (mobile nudge)
@@ -434,8 +431,8 @@
     homeScreen.innerHTML =
       '<div class="mb-mascot-wrap">' +
         '<video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback poster="' + MASCOT_IMG + '">' +
-          '<source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm">' +
           '<source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1">' +
+          '<source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm">' +
           '<img src="' + MASCOT_IMG + '" alt="MoxieBuddy Mascot">' +
         '</video>' +
         '<div class="mb-mascot-shadow"></div>' +
