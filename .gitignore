@@ -48,3 +48,6 @@ credsShopify*
 
 # Reports
 july-report.html
+
+# Large design source files
+*.mov
