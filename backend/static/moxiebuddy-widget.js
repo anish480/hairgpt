@@ -132,15 +132,19 @@
   var CSS = `
     /* === Reset === */
     #mb-widget *,#mb-widget *::before,#mb-widget *::after{box-sizing:border-box;margin:0;padding:0;}
-    #mb-widget{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#2D2D2D;position:fixed;bottom:20px;right:20px;z-index:999999;}
+    #mb-widget{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#2D2D2D;position:fixed;bottom:20px;right:35px;z-index:999999;}
 
     /* === Floating Bubble === */
     #mb-bubble{width:clamp(55px,5vw,65px);height:clamp(55px,5vw,65px);border-radius:clamp(25px,2.3vw,30px);background:#7ed2c1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none;transition:transform .2s ease,box-shadow .2s ease;padding:0;overflow:visible;}
     #mb-bubble:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,0.22);}
     #mb-bubble img,#mb-bubble video{width:clamp(76px,6.9vw,90px);height:clamp(76px,6.9vw,90px);border-radius:0;object-fit:cover;}
+    #mb-bubble video{opacity:0;transition:opacity .3s ease;}
+    #mb-bubble video.mb-vid-ready{opacity:1;}
+    #mb-bubble img.mb-vid-fallback{display:none;}
+    #mb-bubble img.mb-vid-fallback.mb-show{display:block;}
 
     /* === Panel === */
-    #mb-panel{display:flex;flex-direction:column;width:337.5px;height:600px;max-height:calc(100vh - 100px);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;position:fixed;bottom:90px;right:20px;z-index:999999;background-color:#FAFFF8;background-image:url(` + BACKGROUND_IMG + `);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transform:scale(0.4) translateY(20px);transform-origin:bottom right;pointer-events:none;transition:opacity .25s ease,transform .25s cubic-bezier(.175,.885,.32,1.275);}
+    #mb-panel{display:flex;flex-direction:column;width:337.5px;height:600px;max-height:calc(100vh - 100px);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;position:fixed;bottom:90px;right:35px;z-index:999999;background-color:#FAFFF8;background-image:url(` + BACKGROUND_IMG + `);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transform:scale(0.4) translateY(20px);transform-origin:bottom right;pointer-events:none;transition:opacity .25s ease,transform .25s cubic-bezier(.175,.885,.32,1.275);}
     #mb-panel.mb-open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto;}
     @media(max-width:440px){#mb-panel{width:100vw;height:100vh;max-height:100vh;right:0;bottom:0;border-radius:0;}}
 
@@ -150,6 +154,8 @@
     #mb-minimize-btn{width:32px;height:32px;border:none;background:rgba(0,0,0,0.08);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;position:absolute;right:20px;}
     #mb-minimize-btn:hover{background:rgba(0,0,0,0.15);}
     #mb-minimize-btn svg{width:16px;height:16px;}
+    #mb-reset-btn{position:absolute;left:20px;border:none;background:none;font-size:11px;font-weight:600;color:#7EC8B7;cursor:pointer;padding:4px 0;letter-spacing:0.02em;opacity:0;pointer-events:none;transition:opacity .2s ease;}
+    #mb-reset-btn.mb-reset-visible{opacity:1;pointer-events:auto;}
 
     /* === Home Screen === */
     #mb-home-screen{display:flex;flex-direction:column;align-items:center;width:100%;flex:1;overflow-y:auto;overflow-x:hidden;transition:opacity .25s ease;}
@@ -283,11 +289,6 @@
     #mb-cam-confirm{width:40px;height:40px;background:#7EC8B7;color:#fff;font-size:18px;}
     #mb-cam-flip{width:40px;height:40px;background:rgba(255,255,255,0.2);color:#fff;font-size:16px;}
 
-    /* Exit-intent tooltip (mobile nudge) */
-    #mb-exit-tooltip{display:none;position:absolute;bottom:72px;right:0;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:12px 32px 12px 16px;max-width:220px;font-size:13px;color:#2D2D2D;line-height:1.4;cursor:pointer;z-index:999998;opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease;}
-    #mb-exit-tooltip.mb-tooltip-show{display:block;opacity:1;transform:translateY(0);}
-    #mb-exit-tooltip::after{content:'';position:absolute;bottom:-6px;right:20px;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:2px 2px 4px rgba(0,0,0,0.08);}
-    .mb-tooltip-close{position:absolute;top:4px;right:8px;background:none;border:none;font-size:16px;color:#999;cursor:pointer;padding:2px;line-height:1;}
   `;
 
   /* ───────────────────────── Build DOM ───────────────────────── */
@@ -305,16 +306,20 @@
     var bubble = document.createElement("button");
     bubble.id = "mb-bubble";
     bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
-    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback poster="' + MASCOT_ICON_IMG + '"><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"><img src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy"></video>';
+    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"></video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
+    var bubbleVid = bubble.querySelector("video");
+    var bubbleFallback = bubble.querySelector(".mb-vid-fallback");
+    var bubbleVidTimer = setTimeout(function () {
+      if (!bubbleVid.classList.contains("mb-vid-ready")) {
+        bubbleFallback.classList.add("mb-show");
+      }
+    }, 5000);
+    bubbleVid.addEventListener("loadeddata", function () {
+      clearTimeout(bubbleVidTimer);
+      bubbleVid.classList.add("mb-vid-ready");
+      bubbleFallback.classList.remove("mb-show");
+    });
     container.appendChild(bubble);
-
-    // Exit-intent tooltip (mobile nudge)
-    var exitTooltip = document.createElement("div");
-    exitTooltip.id = "mb-exit-tooltip";
-    exitTooltip.innerHTML =
-      '<button class="mb-tooltip-close" aria-label="Dismiss">&times;</button>' +
-      'Need help finding your perfect hair routine?';
-    container.appendChild(exitTooltip);
 
     // Chat panel
     var panel = document.createElement("div");
@@ -324,6 +329,7 @@
     var logoBar = document.createElement("div");
     logoBar.id = "mb-logo-bar";
     logoBar.innerHTML =
+      '<button id="mb-reset-btn">New chat</button>' +
       '<img id="mb-home-logo" src="' + LOGO_IMG + '" alt="HAIR GPT">' +
       '<button id="mb-minimize-btn" aria-label="Minimize chat">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
@@ -547,8 +553,9 @@
     var chatArea = $("mb-chat-area");
     if (home) home.classList.add("mb-hidden");
     if (chatArea) chatArea.classList.add("mb-active");
+    var resetBtn = $("mb-reset-btn");
+    if (resetBtn) resetBtn.classList.add("mb-reset-visible");
     scrollToBottom();
-    $("mb-text-input").focus();
   }
 
   function switchToHome() {
@@ -557,6 +564,23 @@
     var chatArea = $("mb-chat-area");
     if (home) home.classList.remove("mb-hidden");
     if (chatArea) chatArea.classList.remove("mb-active");
+    var resetBtn = $("mb-reset-btn");
+    if (resetBtn) resetBtn.classList.remove("mb-reset-visible");
+  }
+
+  function resetChat() {
+    state.sessionId = "";
+    state.history = [];
+    state.messages = [];
+    state.hairContext = null;
+    state.lastRoutine = null;
+    state.suggestedOptions = [];
+    saveSession();
+    var messagesEl = $("mb-messages");
+    if (messagesEl) messagesEl.innerHTML = "";
+    var optionsEl = $("mb-options");
+    if (optionsEl) optionsEl.innerHTML = "";
+    switchToHome();
   }
 
   /* ───────────────────────── Restore chat history in DOM ───────────────────────── */
@@ -1030,38 +1054,11 @@
 
   /* ───────────────────────── Exit-intent trigger ───────────────────────── */
 
-  function showExitTooltip() {
-    var tip = $("mb-exit-tooltip");
-    if (!tip) return;
-    tip.classList.add("mb-tooltip-show");
-    void tip.offsetWidth;
-    tip.style.opacity = "";
-    tip.style.transform = "";
-
-    var autoDismiss = setTimeout(function () {
-      tip.classList.remove("mb-tooltip-show");
-    }, 8000);
-
-    tip.addEventListener("click", function handler(e) {
-      clearTimeout(autoDismiss);
-      tip.removeEventListener("click", handler);
-      tip.classList.remove("mb-tooltip-show");
-      if (e.target.classList.contains("mb-tooltip-close")) return;
-      state.isOpen = true;
-      $("mb-panel").classList.add("mb-open");
-      _userOpenedWidget = true;
-    });
-  }
-
   function fireExitIntent() {
     if (!shouldFireExitIntent()) return;
     markExitIntentFired();
-    if (isMobileViewport()) {
-      showExitTooltip();
-    } else {
-      state.isOpen = true;
-      $("mb-panel").classList.add("mb-open");
-    }
+    state.isOpen = true;
+    $("mb-panel").classList.add("mb-open");
   }
 
   function armDesktopExitIntent() {
@@ -1105,13 +1102,17 @@
       $("mb-panel").classList.toggle("mb-open", state.isOpen);
       if (state.isOpen) {
         _userOpenedWidget = true;
-        var tip = $("mb-exit-tooltip");
-        if (tip) tip.classList.remove("mb-tooltip-show");
-        $("mb-text-input").focus();
-        var mascotVid = $("mb-home-mascot");
-        if (mascotVid && mascotVid.play) mascotVid.play().catch(function(){});
+        if (state.messages && state.messages.length > 0) {
+          switchToChat();
+        } else {
+          var mascotVid = $("mb-home-mascot");
+          if (mascotVid && mascotVid.play) mascotVid.play().catch(function(){});
+        }
       }
     });
+
+    // Reset chat button
+    $("mb-reset-btn").addEventListener("click", resetChat);
 
     // Minimize button → close panel
     $("mb-minimize-btn").addEventListener("click", function () {
@@ -1260,6 +1261,9 @@
   function init() {
     buildWidget();
     restoreMessages();
+    if (state.messages && state.messages.length > 0) {
+      switchToChat();
+    }
     wireEvents();
   }
 
