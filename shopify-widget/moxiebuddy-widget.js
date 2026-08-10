@@ -259,23 +259,24 @@
     /* Mascot */
     .mb-mascot-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
     #mb-home-mascot{margin-top:30px;width:160px;height:auto;display:block;}
-    .mb-mascot-shadow{width:90px;height:14px;background:radial-gradient(ellipse at center,rgba(0,0,0,0.13) 0%,rgba(0,0,0,0.04) 50%,transparent 70%);border-radius:50%;margin-top:-21px;}
+    #mb-widget .mb-mascot-shadow{width:90px;height:14px;background:radial-gradient(ellipse at center,rgba(0,0,0,0.13) 0%,rgba(0,0,0,0.04) 50%,transparent 70%);border-radius:50%;margin-top:-27px;}
 
-    /* Action buttons row */
-    #mb-action-buttons{display:flex;gap:8px;margin-top:60px;padding:10px 26px;width:100%;}
-    #mb-widget .mb-action-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.85);border:1px solid #E0E0E0;border-radius:12px;padding:14px 8px;cursor:pointer;transition:border-color .15s,background .15s;}
-    .mb-action-btn:hover{border-color:#7EC8B7;background:rgba(255,255,255,0.95);}
-    .mb-action-btn span{font-size:14px;color:#2D2D2D;font-weight:500;}
-    .mb-action-btn .mb-action-icon{width:28px;height:28px;}
-
-    /* Section header */
-    #mb-section-header{margin-top:30px;font-size:18px;font-weight:600;color:#7EC8B7;text-align:center;line-height:1.4;padding:0 26px;}
+    /* Section header / tagline */
+    #mb-section-header{margin-top:20px;font-size:16px;font-weight:500;color:#7EC8B7;text-align:center;line-height:1.4;padding:0 26px;}
+    #mb-section-header strong{font-weight:700;}
 
     /* Suggested question cards */
-    #mb-suggested-questions{display:flex;flex-direction:column;gap:12px;margin-top:20px;padding:0 26px;width:100%;padding-bottom:80px;}
-    #mb-widget .mb-suggestion-card{background:rgba(255,255,255,0.7);border:none;border-left:3px solid #7EC8B7;border-radius:4px;padding:5px;cursor:pointer;font-size:14px;color:#666666;line-height:1.6;text-align:left;transition:background .15s;}
+    #mb-suggested-questions{display:flex;flex-direction:column;gap:8px;margin-top:16px;padding:0 20px;width:100%;}
+    #mb-widget .mb-suggestion-card{background:rgba(255,255,255,0.65);border:none;border-radius:12px;padding:12px 16px;cursor:pointer;font-size:13px;color:#555;line-height:1.5;text-align:left;transition:background .15s;}
     .mb-suggestion-card:hover{background:rgba(255,255,255,0.9);}
     .mb-suggestion-card:active{transform:scale(0.97);}
+
+    /* Action buttons row */
+    #mb-action-buttons{display:flex;gap:10px;margin-top:14px;padding:0 20px 20px;width:100%;}
+    #mb-widget .mb-action-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.85);border:none;border-radius:16px;padding:18px 8px;cursor:pointer;transition:background .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+    .mb-action-btn:hover{background:rgba(255,255,255,0.95);}
+    .mb-action-btn span{font-size:14px;color:#2D2D2D;font-weight:500;}
+    .mb-action-btn .mb-action-icon{width:28px;height:28px;}
 
     /* === Chat area (replaces home content when conversation starts) === */
     #mb-chat-area{display:none;flex-direction:column;flex:1;overflow:hidden;}
@@ -439,12 +440,17 @@
     homeScreen.id = "mb-home-screen";
     homeScreen.innerHTML =
       '<div class="mb-mascot-wrap">' +
-        '<video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback poster="' + MASCOT_IMG + '">' +
+        '<video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback>' +
           '<source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1">' +
           '<source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm">' +
-          '<img src="' + MASCOT_IMG + '" alt="MoxieBuddy Mascot">' +
         '</video>' +
         '<div class="mb-mascot-shadow"></div>' +
+      '</div>' +
+      '<div id="mb-section-header">Feeling <strong>stranded</strong> about your hair?<br>We’re here to help!</div>' +
+      '<div id="mb-suggested-questions">' +
+        '<div class="mb-suggestion-card" data-question="What is my hair type?">What is my hair type?</div>' +
+        '<div class="mb-suggestion-card" data-question="What should I use for dandruff?">What should I use for dandruff?</div>' +
+        '<div class="mb-suggestion-card" data-question="What&#39;s the difference between Curl Cream and Serum Gel?">What&#39;s the difference between Curl Cream and Serum Gel?</div>' +
       '</div>' +
       '<div id="mb-action-buttons">' +
         '<button class="mb-action-btn" id="mb-upload-photo-btn">' +
@@ -455,12 +461,6 @@
           '<span>Take a photo</span>' +
           '<div class="mb-action-icon">' + CAMERA_ICON + '</div>' +
         '</button>' +
-      '</div>' +
-      '<div id="mb-section-header">Have questions like this?<br>Ask us!</div>' +
-      '<div id="mb-suggested-questions">' +
-        '<div class="mb-suggestion-card" data-question="What is my hair type?">What is my hair type?</div>' +
-        '<div class="mb-suggestion-card" data-question="What should I use for dandruff?">What should I use for dandruff?</div>' +
-        '<div class="mb-suggestion-card" data-question="What&#39;s the difference between Curl Cream and Serum Gel?">What&#39;s the difference between Curl Cream and Serum Gel?</div>' +
       '</div>';
     panel.appendChild(homeScreen);
 
