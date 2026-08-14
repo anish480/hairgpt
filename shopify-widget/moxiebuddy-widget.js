@@ -236,6 +236,7 @@
     #mb-bubble video.mb-vid-ready{opacity:1;}
     #mb-bubble img.mb-vid-fallback{display:none;}
     #mb-bubble img.mb-vid-fallback.mb-show{display:block;}
+    #mb-bubble video::-webkit-media-controls,#mb-home-mascot::-webkit-media-controls,#mb-bubble video::-webkit-media-controls-panel,#mb-home-mascot::-webkit-media-controls-panel,#mb-bubble video::-webkit-media-controls-start-playback-button,#mb-home-mascot::-webkit-media-controls-start-playback-button{display:none !important;-webkit-appearance:none;}
     @keyframes mb-bubble-entrance{0%{transform:scale(0) translateY(20px);opacity:0;}60%{transform:scale(1.15) translateY(-4px);opacity:1;}100%{transform:scale(1) translateY(0);opacity:1;}}
 
     /* === Panel === */
@@ -402,7 +403,7 @@
     var bubble = document.createElement("button");
     bubble.id = "mb-bubble";
     bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
-    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback>' +
+    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture>' +
       '<source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1">' +
       '<source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm">' +
     '</video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
@@ -440,7 +441,7 @@
     homeScreen.id = "mb-home-screen";
     homeScreen.innerHTML =
       '<div class="mb-mascot-wrap">' +
-        '<video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback>' +
+        '<video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture>' +
           '<source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1">' +
           '<source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm">' +
         '</video>' +

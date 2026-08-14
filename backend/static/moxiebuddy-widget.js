@@ -142,6 +142,7 @@
     #mb-bubble video.mb-vid-ready{opacity:1;}
     #mb-bubble img.mb-vid-fallback{display:none;}
     #mb-bubble img.mb-vid-fallback.mb-show{display:block;}
+    #mb-bubble video::-webkit-media-controls,#mb-home-mascot::-webkit-media-controls,#mb-bubble video::-webkit-media-controls-panel,#mb-home-mascot::-webkit-media-controls-panel,#mb-bubble video::-webkit-media-controls-start-playback-button,#mb-home-mascot::-webkit-media-controls-start-playback-button{display:none !important;-webkit-appearance:none;}
 
     /* === Panel === */
     #mb-panel{display:flex;flex-direction:column;width:337.5px;height:600px;max-height:calc(100vh - 100px);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;position:fixed;bottom:90px;right:35px;z-index:999999;background-color:#FAFFF8;background-image:url(` + BACKGROUND_IMG + `);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transform:scale(0.4) translateY(20px);transform-origin:bottom right;pointer-events:none;transition:opacity .25s ease,transform .25s cubic-bezier(.175,.885,.32,1.275);}
@@ -307,7 +308,7 @@
     var bubble = document.createElement("button");
     bubble.id = "mb-bubble";
     bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
-    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"></video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
+    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"></video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
     var bubbleVid = bubble.querySelector("video");
     var bubbleFallback = bubble.querySelector(".mb-vid-fallback");
     var bubbleVidTimer = setTimeout(function () {
@@ -341,7 +342,7 @@
     var homeScreen = document.createElement("div");
     homeScreen.id = "mb-home-screen";
     homeScreen.innerHTML =
-      '<div class="mb-mascot-wrap"><video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback><source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm"></video><div class="mb-mascot-shadow"></div></div>' +
+      '<div class="mb-mascot-wrap"><video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture><source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm"></video><div class="mb-mascot-shadow"></div></div>' +
       '<div id="mb-section-header">Feeling <strong>stranded</strong> about your hair?<br>We’re here to help!</div>' +
       '<div id="mb-suggested-questions">' +
         '<div class="mb-suggestion-card" data-question="What is my hair type?">What is my hair type?</div>' +
