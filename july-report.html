@@ -258,6 +258,127 @@
   .pill-accent { background: var(--accent-soft); color: var(--accent); }
   .pill-sage { background: var(--sage-soft); color: var(--sage); }
 
+  /* Sentiment section */
+  .sentiment-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .sentiment-ring { flex-shrink: 0; }
+  .sentiment-legend { display: flex; flex-direction: column; gap: 0.4rem; }
+  .legend-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { color: var(--text-2); }
+  .legend-val { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; margin-left: auto; min-width: 2.5rem; text-align: right; }
+
+  .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  @media (max-width: 600px) { .quote-grid { grid-template-columns: 1fr; } }
+  .quote-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-2);
+    position: relative;
+  }
+  .quote-card::before {
+    content: '\201C';
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--taupe);
+    position: absolute;
+    top: 0.4rem;
+    left: 0.6rem;
+  }
+  .quote-card .qt { padding-left: 1rem; }
+  .quote-card .qt-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+  .qt-positive { background: var(--sage-soft); color: var(--sage); }
+  .qt-negative { background: var(--accent-soft); color: var(--accent); }
+
+  .pain-list, .strength-list { list-style: none; padding: 0; }
+  .pain-list li, .strength-list li {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    padding: 0.5rem 0;
+    padding-left: 1.1rem;
+    position: relative;
+    line-height: 1.45;
+    border-bottom: 1px solid var(--border);
+  }
+  .pain-list li:last-child, .strength-list li:last-child { border-bottom: none; }
+  .pain-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .strength-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
+
+  .goal-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.45rem;
+  }
+  .goal-label {
+    font-size: 0.78rem;
+    color: var(--text-2);
+    width: 200px;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 600px) { .goal-label { width: 130px; font-size: 0.72rem; } }
+  .goal-track {
+    flex: 1;
+    height: 16px;
+    background: var(--bar-muted);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .goal-fill {
+    height: 100%;
+    background: var(--bar);
+    border-radius: 3px;
+    opacity: 0.7;
+  }
+  .goal-count {
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-3);
+    width: 28px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
   .insight-strip {
     background: var(--surface-alt);
     border: 1px solid var(--border);
@@ -448,6 +569,87 @@
   </div>
 </div>
 
+<!-- ─── Sentiment Analysis ─── -->
+
+<div style="margin-top: 2.5rem; margin-bottom: 0.5rem;">
+  <div style="font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 400; letter-spacing: -0.01em;">Conversation Sentiment</div>
+  <div style="font-size: 0.75rem; color: var(--text-3); margin-top: 0.15rem;">Based on 150 randomly sampled engaged sessions from July</div>
+</div>
+
+<div class="section">
+  <div class="card">
+    <div class="sentiment-ring-wrap">
+      <canvas id="sentimentRing" width="140" height="140" class="sentiment-ring" style="width:140px;height:140px;"></canvas>
+      <div class="sentiment-legend">
+        <div class="legend-row"><span class="legend-dot" style="background:#6B8E6B;"></span><span class="legend-label">Positive</span><span class="legend-val">76</span></div>
+        <div class="legend-row"><span class="legend-dot" style="background:#D4C5B9;"></span><span class="legend-label">Neutral</span><span class="legend-val">49</span></div>
+        <div class="legend-row"><span class="legend-dot" style="background:#C4697A;"></span><span class="legend-label">Negative</span><span class="legend-val">13</span></div>
+        <div class="legend-row"><span class="legend-dot" style="background:#B8533F;"></span><span class="legend-label">Frustrated</span><span class="legend-val">12</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">What Users Came For</div>
+  <div class="card">
+    <div class="goal-bar-row"><span class="goal-label">Personalized routine</span><div class="goal-track"><div class="goal-fill" style="width:100%"></div></div><span class="goal-count">73</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Hair type ID</span><div class="goal-track"><div class="goal-fill" style="width:58%"></div></div><span class="goal-count">43</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Product usage help</span><div class="goal-track"><div class="goal-fill" style="width:35%"></div></div><span class="goal-count">26</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Frizz &amp; dryness</span><div class="goal-track"><div class="goal-fill" style="width:28%"></div></div><span class="goal-count">21</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Product comparison</span><div class="goal-track"><div class="goal-fill" style="width:25%"></div></div><span class="goal-count">19</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Order management</span><div class="goal-track"><div class="goal-fill" style="width:23%"></div></div><span class="goal-count">17</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Scalp concerns</span><div class="goal-track"><div class="goal-fill" style="width:23%"></div></div><span class="goal-count">17</span></div>
+    <div class="goal-bar-row"><span class="goal-label">Hair growth</span><div class="goal-track"><div class="goal-fill" style="width:9%"></div></div><span class="goal-count">7</span></div>
+  </div>
+</div>
+
+<div class="two-col section">
+  <div class="card">
+    <div class="card-title">What's Working</div>
+    <ul class="strength-list">
+      <li><strong>Photo-to-routine is the magic path.</strong> Users who upload a photo get a personalized routine in 2 messages — highest satisfaction signal.</li>
+      <li><strong>Product comparisons land well.</strong> Curl Cream vs Serum Gel, conditioner vs mask — users ask follow-ups instead of repeating, indicating the explanations are clear.</li>
+      <li><strong>Step-by-step usage builds confidence.</strong> "Apply to soaking wet hair," quantity guidance, and oiling-before-wash advice drive deeper engagement.</li>
+      <li><strong>Tutorial video links convert.</strong> When users ask "show me how," the bot provides YouTube links that keep the conversation going.</li>
+      <li><strong>Graceful handling of edge cases.</strong> Kids' safety, men's products, and off-topic questions are redirected without breaking flow.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">What Needs Fixing</div>
+    <ul class="pain-list">
+      <li><strong>Order management is a dead end.</strong> 17 conversations (11%) were about tracking, cancelling, or modifying orders. The bot asks for an order number, then redirects to email — wasting 2–3 messages and eroding trust.</li>
+      <li><strong>"Try something different" loops.</strong> When users reject a routine, the bot often suggests near-identical alternatives. Users give up after 2–3 attempts.</li>
+      <li><strong>Photo requirement causes drop-offs.</strong> Users who push back on sharing a photo ("Why do you need a photo?") get no compelling answer and leave.</li>
+      <li><strong>Typo tolerance for non-native speakers.</strong> "Descomunt cod" took 3 rounds to resolve to "discount code." Many users type in transliterated Hindi/English.</li>
+      <li><strong>No between-wash-day guidance.</strong> Users report "first day soft, next 2–3 days rough" — the bot gives generic advice instead of a structured refresh routine.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">User Voices</div>
+  <div class="quote-grid">
+    <div class="quote-card"><div class="qt">So my hairs is soft on the scapls but it's really dry on the length so these products are good for my hairs na?<div class="qt-tag qt-positive">Engaged</div></div></div>
+    <div class="quote-card"><div class="qt">I asked you, why do you suggest that specific conditioner, and not a leave-in one.<div class="qt-tag qt-negative">Frustrated — had to ask 3 times</div></div></div>
+    <div class="quote-card"><div class="qt">Okay make this personalised cart for me. Especially all small quantity as I want to give a try<div class="qt-tag qt-positive">Ready to buy</div></div></div>
+    <div class="quote-card"><div class="qt">The hydro repair shampoo — will it make my hair soft for even 3–4 days? First day soft, but the next 2–3 days become so rough<div class="qt-tag qt-negative">Unmet need — refresh routine</div></div></div>
+    <div class="quote-card"><div class="qt">All these are safe for kids?<div class="qt-tag qt-positive">Parent — converted after reassurance</div></div></div>
+    <div class="quote-card"><div class="qt">I want only 1 after product either cream or gel. Tell final products<div class="qt-tag qt-negative">Bot kept pushing both</div></div></div>
+  </div>
+</div>
+
+<div class="insight-strip" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+  <h3>Unmet Needs &amp; Opportunities</h3>
+  <ul>
+    <li><strong>Order tracking integration</strong> — the single biggest source of negative sentiment. Even a basic Shopify order-status lookup would eliminate 11% of frustrated sessions.</li>
+    <li><strong>Hair growth products</strong> — 7+ users asked for hair fall/thinning solutions. Moxie doesn't offer these yet, signaling unmet market demand.</li>
+    <li><strong>Quick-commerce availability</strong> — users asked about buying from Blinkit. The bot should know which platforms carry Moxie products.</li>
+    <li><strong>Day-2/Day-3 refresh routine</strong> — a structured "refresh day" guide would address the #1 product-satisfaction concern.</li>
+    <li><strong>Travel/sample sizes</strong> — multiple users wanted to try before committing. Only curl cream and gel have minis currently.</li>
+  </ul>
+</div>
+
 <div class="insight-strip">
   <h3>Key Takeaways</h3>
   <ul>
@@ -538,5 +740,46 @@
       ctx.fillText('Jul ' + item.d, x + barW / 2, h - 6);
     }
   });
+})();
+
+// Sentiment donut
+(function() {
+  const canvas = document.getElementById('sentimentRing');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 140 * dpr;
+  canvas.height = 140 * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const data = [
+    { val: 76, color: '#6B8E6B' },
+    { val: 49, color: getComputedStyle(document.documentElement).getPropertyValue('--taupe').trim() || '#D4C5B9' },
+    { val: 13, color: '#C4697A' },
+    { val: 12, color: '#B8533F' }
+  ];
+  const total = data.reduce((s, d) => s + d.val, 0);
+  const cx = 70, cy = 70, r = 55, lw = 18;
+
+  let startAngle = -Math.PI / 2;
+  data.forEach(d => {
+    const sweep = (d.val / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, startAngle + sweep);
+    ctx.strokeStyle = d.color;
+    ctx.lineWidth = lw;
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+    startAngle += sweep;
+  });
+
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+  ctx.font = '600 22px -apple-system, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('51%', cx, cy - 6);
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim();
+  ctx.font = '10px -apple-system, system-ui, sans-serif';
+  ctx.fillText('positive', cx, cy + 10);
 })();
 </script>

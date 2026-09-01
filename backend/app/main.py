@@ -1,3 +1,4 @@
+import json
 import logging
 import uuid
 from pathlib import Path
@@ -11,7 +12,7 @@ from pydantic import BaseModel, Field
 from contextlib import asynccontextmanager
 
 from app.config import settings
-from app.db import close as close_db
+from app.db import close as close_db, get_pool
 from app.kiosk import (
     KIOSK_HTML,
     KIOSK_ADMIN_HTML,
@@ -23,6 +24,7 @@ from app.kiosk import (
 )
 from app.llm import classify_hair_photo, format_classification_summary
 from app.orchestrator import chat
+from app.prompt_versions import get_bundle_fingerprint, register_version_if_new
 from app.session_logger import log_session
 from app.throttle import check_rate_limit, check_token_budget, record_tokens
 
@@ -32,6 +34,7 @@ STATIC_DIR = Path(__file__).resolve().parents[1] / "static"
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     await ensure_sampler_column()
+    await register_version_if_new()
     yield
     await close_db()
 
@@ -120,6 +123,7 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
         ga_context=req.ga_context,
         routine_data=routine_data,
         photo_uploaded=photo_uploaded,
+        prompt_version=get_bundle_fingerprint(),
     )
 
     return ChatResponse(
@@ -129,6 +133,28 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
         suggested_options=options,
         routine=routine_data,
     )
+
+
+class EventRequest(BaseModel):
+    session_id: str
+    event: str
+    payload: dict = Field(default_factory=dict)
+
+
+@app.post("/event")
+async def track_event(req: EventRequest):
+    try:
+        pool = await get_pool()
+        async with pool.acquire() as conn:
+            await conn.execute(
+                "INSERT INTO hairgpt_events (session_id, event, payload) VALUES ($1, $2, $3)",
+                req.session_id,
+                req.event,
+                json.dumps(req.payload),
+            )
+    except Exception:
+        pass
+    return {"ok": True}
 
 
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/heic"}

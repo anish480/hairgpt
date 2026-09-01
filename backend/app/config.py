@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     gcp_project_id: str = "hairgpt-496305"
     gcp_location: str = "asia-south1"
 
-    shopify_shop: str = "moxie-dev-store-soqsybgm"
+    shopify_shop: str = "moxiebeauty-haircare"
     shopify_api_version: str = "2026-07"
     shopify_client_id_secret: str = "shopify-client-id"
     shopify_client_secret_secret: str = "shopify-client-secret"

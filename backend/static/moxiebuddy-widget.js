@@ -885,11 +885,16 @@
         return fetch("/cart/add.js", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] }),
+          body: JSON.stringify({ items: [{ id: variantId, quantity: 1, properties: { _hairgpt_session: state.sessionId } }] }),
         });
       })
       .then(function (res) {
         if (!res.ok) throw new Error("Cart add failed");
+        fetch(API + "/event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: state.sessionId, event: "add_to_cart", payload: { product_handle: handle } }),
+        }).catch(function () {});
         callback(true);
       })
       .catch(function (err) {

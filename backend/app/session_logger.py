@@ -36,6 +36,7 @@ async def log_session(
     hair_context: dict | None = None,
     routine_data: dict | None = None,
     photo_uploaded: bool = False,
+    prompt_version: str | None = None,
 ) -> None:
     try:
         pool = await get_pool()
@@ -48,8 +49,8 @@ async def log_session(
                 INSERT INTO chat_sessions
                     (session_id, device_info, ga_context, conversation_log,
                      hair_context, routine_recommended, message_count,
-                     photo_uploaded, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+                     photo_uploaded, prompt_version, created_at, updated_at)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
                 ON CONFLICT (session_id) DO UPDATE SET
                     conversation_log = EXCLUDED.conversation_log,
                     hair_context = COALESCE(EXCLUDED.hair_context, chat_sessions.hair_context),
@@ -58,6 +59,7 @@ async def log_session(
                     photo_uploaded = chat_sessions.photo_uploaded OR EXCLUDED.photo_uploaded,
                     device_info = COALESCE(EXCLUDED.device_info, chat_sessions.device_info),
                     ga_context = COALESCE(EXCLUDED.ga_context, chat_sessions.ga_context),
+                    prompt_version = COALESCE(EXCLUDED.prompt_version, chat_sessions.prompt_version),
                     updated_at = NOW()
                 """,
                 session_id,
@@ -68,6 +70,7 @@ async def log_session(
                 json.dumps(routine_data) if routine_data else None,
                 message_count,
                 photo_uploaded,
+                prompt_version,
             )
     except Exception:
         logger.exception("Failed to log chat session %s", session_id)

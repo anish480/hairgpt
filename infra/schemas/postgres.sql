@@ -79,6 +79,57 @@ CREATE TABLE IF NOT EXISTS kiosk_sessions (
 CREATE INDEX IF NOT EXISTS idx_kiosk_phone ON kiosk_sessions (phone);
 CREATE INDEX IF NOT EXISTS idx_kiosk_event ON kiosk_sessions (event_name);
 
+-- Prompt version registry (frozen snapshots of prompt/guardrail/param bundles)
+CREATE TABLE IF NOT EXISTS prompt_versions (
+  fingerprint     TEXT PRIMARY KEY,
+  version_bundle  JSONB NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Chat sessions (primary runtime table — widget conversations)
+CREATE TABLE IF NOT EXISTS chat_sessions (
+  session_id          TEXT PRIMARY KEY,
+  device_info         JSONB DEFAULT '{}'::jsonb,
+  ga_context          JSONB DEFAULT '{}'::jsonb,
+  conversation_log    JSONB DEFAULT '[]'::jsonb,
+  hair_context        JSONB DEFAULT '{}'::jsonb,
+  routine_recommended JSONB,
+  message_count       INT DEFAULT 0,
+  photo_uploaded      BOOLEAN DEFAULT FALSE,
+  prompt_version      TEXT REFERENCES prompt_versions(fingerprint),
+  created_at          TIMESTAMPTZ DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ DEFAULT NOW(),
+  metadata            JSONB DEFAULT '{}'::jsonb
+);
+CREATE INDEX IF NOT EXISTS chat_sessions_prompt_ver_idx ON chat_sessions (prompt_version);
+
+-- Widget events (ATC tracking, extensible for future events)
+CREATE TABLE IF NOT EXISTS hairgpt_events (
+  id          BIGSERIAL PRIMARY KEY,
+  session_id  TEXT NOT NULL,
+  event       TEXT NOT NULL,
+  payload     JSONB DEFAULT '{}'::jsonb,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS hairgpt_events_session_idx ON hairgpt_events (session_id);
+CREATE INDEX IF NOT EXISTS hairgpt_events_event_idx ON hairgpt_events (event, created_at);
+
+-- Conversion attribution (Shopify order ↔ HairGPT session)
+CREATE TABLE IF NOT EXISTS hairgpt_conversions (
+  id                BIGSERIAL PRIMARY KEY,
+  session_id        TEXT NOT NULL,
+  shopify_order_id  TEXT NOT NULL UNIQUE,
+  order_number      TEXT,
+  order_total       NUMERIC(10,2),
+  hairgpt_revenue   NUMERIC(10,2),
+  hairgpt_items     INT,
+  total_items       INT,
+  order_created_at  TIMESTAMPTZ,
+  reconciled_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS hairgpt_conv_session_idx ON hairgpt_conversions (session_id);
+CREATE INDEX IF NOT EXISTS hairgpt_conv_order_date_idx ON hairgpt_conversions (order_created_at);
+
 -- Feedback
 CREATE TABLE IF NOT EXISTS message_feedback (
   message_id      BIGINT REFERENCES messages(id),
