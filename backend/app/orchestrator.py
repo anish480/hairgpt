@@ -170,7 +170,7 @@ async def chat(
                 {"role": "user", "content": user_message},
                 {"role": "assistant", "content": redirect_msg},
             ]
-            return redirect_msg, updated_history, [], None, 0
+            return redirect_msg, updated_history, [], [], None, 0
 
     chunks = await retrieve(user_message, top_k=5)
     retrieval_context = format_retrieval_context(chunks)
@@ -228,7 +228,7 @@ async def chat(
     if resp.usage_metadata:
         output_tokens = getattr(resp.usage_metadata, "candidates_token_count", 0) or 0
 
-    display_text, suggested_options = _parse_options(response_text)
+    display_text, suggested_options, multi_select_options = _parse_options(response_text)
 
     display_text = _inject_missing_video_url(display_text, chunks)
 
@@ -236,13 +236,14 @@ async def chat(
     if not is_safe:
         display_text = sanitized
         suggested_options = ["I need a routine", "I have a product question", "Upload a photo of my hair"]
+        multi_select_options = []
 
     updated_history = history + [
         {"role": "user", "content": user_message},
         {"role": "assistant", "content": display_text},
     ]
 
-    return display_text, updated_history, suggested_options, routine_data, output_tokens
+    return display_text, updated_history, suggested_options, multi_select_options, routine_data, output_tokens
 
 
 _YT_URL_RE = re.compile(r"https?://(?:www\.)?(?:youtube\.com/(?:shorts/|watch\?v=)|youtu\.be/)[\w-]{11}")
@@ -264,10 +265,23 @@ def _inject_missing_video_url(text: str, chunks: list) -> str:
     return text
 
 
-def _parse_options(text: str) -> tuple[str, list[str]]:
-    match = re.search(r"\n?OPTIONS:\s*(.+?)$", text, re.MULTILINE)
-    if not match:
-        return text, []
-    options = [o.strip() for o in match.group(1).split("|") if o.strip()]
-    display_text = text[: match.start()].rstrip()
-    return display_text, options
+def _parse_options(text: str) -> tuple[str, list[str], list[str]]:
+    multi_match = re.search(r"\n?MULTI_OPTIONS:\s*(.+?)$", text, re.MULTILINE)
+    match = re.search(r"\n?(?<!MULTI_)OPTIONS:\s*(.+?)$", text, re.MULTILINE)
+
+    multi_options: list[str] = []
+    if multi_match:
+        multi_options = [o.strip() for o in multi_match.group(1).split("|") if o.strip()]
+
+    options: list[str] = []
+    if match:
+        options = [o.strip() for o in match.group(1).split("|") if o.strip()]
+
+    cuts = sorted(
+        [m.start() for m in (multi_match, match) if m],
+        reverse=False,
+    )
+    if cuts:
+        text = text[: cuts[0]].rstrip()
+
+    return text, options, multi_options

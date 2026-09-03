@@ -65,11 +65,14 @@ You will receive a single image of a person's hair. First assess image quality, 
 
 STEP 1 — IMAGE QUALITY ASSESSMENT
 Before classifying, check if the image is usable:
-- "good": hair is clearly visible, in focus, adequate lighting — proceed to classify.
+- "good": hair is clearly visible, in focus, adequate lighting, hair is loose/open, taken from front or back — proceed to classify.
 - "blurry": image is out of focus or motion-blurred — hair texture unreadable.
 - "poor_lighting": too dark, overexposed, or heavy light aberration — hair detail lost.
 - "no_hair_visible": no hair in frame, face-only, object, or unrelated image.
-- "obscured": hair is tied up, covered by hat/scarf, or cropped out.
+- "obscured": hair is covered by hat, scarf, hoodie, or significantly cropped out of frame.
+- "hair_tied": hair is in a ponytail, bun, braid, or otherwise tied up — need it loose and open.
+- "side_angle": photo taken from the side — need a front-facing or back-of-hair view for accurate typing.
+- "not_natural_state": hair is visibly wet/damp or heavily heat-styled (e.g., clearly flat-ironed straight) — classification is unreliable. Only flag this for clearly unnatural states, not mild product styling.
 
 If image_quality is anything other than "good", set classifiable to false and leave
 classification fields at their default values. The system will ask the user for a better photo.
@@ -140,7 +143,7 @@ HAIR_CLASSIFICATION_SCHEMA = types.Schema(
     properties={
         "image_quality": types.Schema(
             type="STRING",
-            enum=["good", "blurry", "poor_lighting", "no_hair_visible", "obscured"],
+            enum=["good", "blurry", "poor_lighting", "no_hair_visible", "obscured", "hair_tied", "side_angle", "not_natural_state"],
         ),
         "classifiable": types.Schema(type="BOOLEAN"),
         "gender": types.Schema(
@@ -178,8 +181,11 @@ HAIR_CLASSIFICATION_SCHEMA = types.Schema(
 RETRY_MESSAGES = {
     "blurry": "Your photo seems a bit blurry — could you take another one with steadier hands and good lighting? That'll help me read your hair texture accurately!",
     "poor_lighting": "The lighting in your photo makes it hard to see your hair clearly. Could you try again in natural light or a well-lit room?",
-    "no_hair_visible": "I can't quite see your hair in this photo. Could you send one that shows your hair clearly — ideally loose and from the side or back?",
-    "obscured": "It looks like your hair is tied up or covered. For the best analysis, could you send a photo with your hair down and visible?",
+    "no_hair_visible": "I can't see any hair in this photo! Could you send one showing your hair loose — a front or back view works great.",
+    "obscured": "It looks like your hair is covered by a hat or scarf. Could you send a photo with your hair fully visible and loose?",
+    "hair_tied": "Your hair looks tied up! For an accurate analysis, could you let it down and send a front or back view? I need to see your natural texture loose.",
+    "side_angle": "I need a front-facing or back-of-hair shot to read your texture properly — side angles make it tricky! Could you try again?",
+    "not_natural_state": "Your hair looks wet or heavily styled right now. I get the most accurate read on naturally dried hair — could you towel-dry and send another photo?",
 }
 
 

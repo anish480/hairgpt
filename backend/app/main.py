@@ -63,6 +63,7 @@ class ChatResponse(BaseModel):
     session_id: str
     history: list[dict]
     suggested_options: list[str] = Field(default_factory=list)
+    multi_select_options: list[str] = Field(default_factory=list)
     routine: dict | None = None
 
 
@@ -106,7 +107,7 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
             suggested_options=[],
         )
 
-    response_text, updated_history, options, routine_data, output_tokens = await chat(req.message, req.history)
+    response_text, updated_history, options, multi_options, routine_data, output_tokens = await chat(req.message, req.history)
 
     if output_tokens > 0:
         await record_tokens(session_id, output_tokens)
@@ -131,6 +132,7 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
         session_id=session_id,
         history=updated_history,
         suggested_options=options,
+        multi_select_options=multi_options,
         routine=routine_data,
     )
 

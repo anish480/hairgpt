@@ -222,6 +222,15 @@
     #mb-widget .mb-opt-btn{background:rgba(255,255,255,0.92);border:none;color:#2D2D2D;border-radius:20px;padding:10px 20px;font-size:13px;cursor:pointer;transition:box-shadow .15s,background .15s;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.1);}
     #mb-widget .mb-opt-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,0.18);background:rgba(255,255,255,1);}
 
+    /* Multi-select options */
+    .mb-multiselect-wrap{padding:4px 0 8px 0;margin-top:4px;}
+    .mb-multiselect-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+    #mb-widget .mb-ms-chip{background:rgba(255,255,255,0.92);border:1.5px solid #E0E0E0;color:#2D2D2D;border-radius:20px;padding:10px 18px;font-size:13px;cursor:pointer;transition:box-shadow .15s,background .15s,border-color .15s;white-space:normal;word-break:break-word;box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+    #mb-widget .mb-ms-chip:hover{box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+    #mb-widget .mb-ms-chip.mb-ms-selected{background:#E8F5F0;border-color:#7EC8B7;color:#2D2D2D;font-weight:500;}
+    #mb-widget .mb-ms-done{background:#7EC8B7;color:#fff;border:none;border-radius:20px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;box-shadow:0 1px 4px rgba(0,0,0,0.12);margin-top:6px;}
+    #mb-widget .mb-ms-done:disabled{opacity:0.4;cursor:not-allowed;}
+
     /* === Input Bar (shared between home + chat) === */
     #mb-input-bar{display:flex;align-items:center;gap:6px;padding:10px 16px;flex-shrink:0;position:relative;z-index:2;}
     #mb-text-input{flex:1;border:1px solid #E0E0E0;border-radius:18px;padding:9px 14px;font-size:14px;outline:none;resize:none;max-height:80px;min-height:37px;font-family:inherit;line-height:1.35;transition:border-color .15s;background:#fff;}
@@ -249,7 +258,13 @@
     /* Photo choice modal (upload vs take) */
     #mb-photo-choice-overlay{display:none;position:absolute;inset:0;z-index:90;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:24px;}
     #mb-photo-choice-overlay.mb-pc-open{display:flex;}
-    #mb-photo-choice-box{display:flex;gap:16px;padding:24px 20px;border-radius:16px;background:#F8F6F0;max-width:340px;width:100%;}
+    #mb-photo-choice-box{display:flex;flex-direction:column;gap:12px;padding:24px 20px;border-radius:16px;background:#F8F6F0;max-width:340px;width:100%;}
+    #mb-widget .mb-pc-tips{font-size:12px;color:#5A5A5A;background:#F8F6F0;border-radius:8px;padding:10px 14px;line-height:1.5;}
+    #mb-widget .mb-pc-tips strong{color:#2D2D2D;font-size:12px;}
+    #mb-widget .mb-pc-tips ul{margin:4px 0 0;padding-left:0;list-style:none;}
+    #mb-widget .mb-pc-tips li{margin-bottom:2px;padding-left:16px;position:relative;}
+    #mb-widget .mb-pc-tips li::before{content:"\\2022";position:absolute;left:4px;color:#999;}
+    .mb-pc-cards-row{display:flex;gap:16px;width:100%;}
     #mb-widget .mb-pc-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 12px 18px;border-radius:12px;background:#fff;border:1.5px solid #E8E8E8;cursor:pointer;transition:box-shadow .15s,border-color .15s;}
     #mb-widget .mb-pc-card:hover{box-shadow:0 2px 10px rgba(0,0,0,0.12);border-color:#7EC8B7;}
     #mb-widget .mb-pc-label{font-size:13px;font-weight:500;color:#2D2D2D;text-align:center;}
@@ -290,6 +305,7 @@
     #mb-cam-retake{width:40px;height:40px;background:rgba(255,255,255,0.2);color:#fff;font-size:18px;}
     #mb-cam-confirm{width:40px;height:40px;background:#7EC8B7;color:#fff;font-size:18px;}
     #mb-cam-flip{width:40px;height:40px;background:rgba(255,255,255,0.2);color:#fff;font-size:16px;}
+    #mb-widget .mb-cam-hud{position:absolute;top:24px;left:50%;transform:translateX(-50%);z-index:2;background:rgba(0,0,0,0.55);color:#fff;font-size:12px;text-align:center;padding:12px 24px;pointer-events:none;border-radius:20px;white-space:nowrap;}
 
   `;
 
@@ -393,13 +409,24 @@
     pcOverlay.id = "mb-photo-choice-overlay";
     pcOverlay.innerHTML =
       '<div id="mb-photo-choice-box">' +
-        '<div class="mb-pc-card" id="mb-pc-upload">' +
-          '<span class="mb-pc-label">Upload a photo</span>' +
-          '<div class="mb-pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7EC8B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>' +
+        '<div class="mb-pc-tips">' +
+          '<strong>Tips for the best result:</strong>' +
+          '<ul>' +
+            '<li>Hair should be open &amp; loose (not tied)</li>' +
+            '<li>Front-facing or back-of-hair view</li>' +
+            '<li>Freshly washed, naturally dried is best</li>' +
+            '<li>Avoid side angles</li>' +
+          '</ul>' +
         '</div>' +
-        '<div class="mb-pc-card" id="mb-pc-camera">' +
-          '<span class="mb-pc-label">Take a photo</span>' +
-          '<div class="mb-pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7EC8B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>' +
+        '<div class="mb-pc-cards-row">' +
+          '<div class="mb-pc-card" id="mb-pc-upload">' +
+            '<span class="mb-pc-label">Upload a photo</span>' +
+            '<div class="mb-pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7EC8B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>' +
+          '</div>' +
+          '<div class="mb-pc-card" id="mb-pc-camera">' +
+            '<span class="mb-pc-label">Take a photo</span>' +
+            '<div class="mb-pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7EC8B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>' +
+          '</div>' +
         '</div>' +
       '</div>';
     panel.appendChild(pcOverlay);
@@ -408,6 +435,7 @@
     var camModal = document.createElement("div");
     camModal.id = "mb-camera-modal";
     camModal.innerHTML =
+      '<div class="mb-cam-hud">Show hair loose, front or back view</div>' +
       '<video id="mb-camera-video" autoplay playsinline></video>' +
       '<canvas id="mb-camera-canvas"></canvas>' +
       '<img id="mb-camera-preview" alt="Preview">' +
@@ -547,6 +575,86 @@
     handleAutoScroll();
   }
 
+  function renderMultiSelectOptions(options) {
+    var old = document.getElementById("mb-inline-options");
+    if (old) old.remove();
+    if (!options || options.length === 0) return;
+
+    var selected = {};
+    var wrap = document.createElement("div");
+    wrap.id = "mb-inline-options";
+    wrap.className = "mb-multiselect-wrap";
+
+    var chipsWrap = document.createElement("div");
+    chipsWrap.className = "mb-multiselect-chips";
+
+    var doneBtn = document.createElement("button");
+    doneBtn.className = "mb-ms-done";
+    doneBtn.textContent = "Done";
+    doneBtn.disabled = true;
+
+    var noneLabel = "none of these";
+
+    function updateDone() {
+      var any = false;
+      for (var k in selected) { if (selected[k]) { any = true; break; } }
+      doneBtn.disabled = !any;
+    }
+
+    for (var i = 0; i < options.length; i++) {
+      var chip = document.createElement("button");
+      chip.className = "mb-ms-chip";
+      chip.textContent = options[i];
+      chip.addEventListener(
+        "click",
+        (function (text, el) {
+          return function () {
+            var isNone = text.toLowerCase() === noneLabel;
+            if (isNone) {
+              for (var k in selected) selected[k] = false;
+              var allChips = chipsWrap.querySelectorAll(".mb-ms-chip");
+              for (var j = 0; j < allChips.length; j++) allChips[j].classList.remove("mb-ms-selected");
+              selected[text] = true;
+              el.classList.add("mb-ms-selected");
+            } else {
+              if (selected[text]) {
+                selected[text] = false;
+                el.classList.remove("mb-ms-selected");
+              } else {
+                var noneKey = null;
+                for (var k in selected) { if (k.toLowerCase() === noneLabel) { noneKey = k; break; } }
+                if (noneKey && selected[noneKey]) {
+                  selected[noneKey] = false;
+                  var allChips = chipsWrap.querySelectorAll(".mb-ms-chip");
+                  for (var j = 0; j < allChips.length; j++) {
+                    if (allChips[j].textContent.toLowerCase() === noneLabel) allChips[j].classList.remove("mb-ms-selected");
+                  }
+                }
+                selected[text] = true;
+                el.classList.add("mb-ms-selected");
+              }
+            }
+            updateDone();
+          };
+        })(options[i], chip)
+      );
+      chipsWrap.appendChild(chip);
+    }
+
+    doneBtn.addEventListener("click", function () {
+      var picks = [];
+      for (var k in selected) { if (selected[k]) picks.push(k); }
+      if (picks.length > 0) {
+        sendMessage(picks.join(", "));
+      }
+    });
+
+    wrap.appendChild(chipsWrap);
+    wrap.appendChild(doneBtn);
+    $("mb-messages").appendChild(wrap);
+    handleAutoScroll();
+  }
+
   /* ───────────────────────── Screen transitions ───────────────────────── */
 
   function switchToChat() {
@@ -647,6 +755,7 @@
             hideTyping();
             addMessageToDOM("bot", photoData.summary);
             state.messages.push({ role: "bot", text: photoData.summary });
+            addMessageToDOM("bot", '<div class="mb-pc-tips" style="margin:4px 0;"><strong>Quick tips:</strong><ul><li>Hair open &amp; loose</li><li>Front or back view</li><li>Naturally dried hair</li></ul></div>');
             state.isSending = false;
             updateSendButton();
             renderOptions(["Upload a photo of my hair", "I'll describe my hair instead"]);
@@ -908,6 +1017,7 @@
     state.sessionId = data.session_id || state.sessionId;
     state.history = data.history || state.history;
     state.suggestedOptions = data.suggested_options || [];
+    state.multiSelectOptions = data.multi_select_options || [];
 
     var answer = data.response || "";
     state.messages.push({ role: "bot", text: answer });
@@ -918,7 +1028,11 @@
       renderRoutineTiles(data.routine);
     }
 
-    renderOptions(state.suggestedOptions);
+    if (state.multiSelectOptions.length > 0) {
+      renderMultiSelectOptions(state.multiSelectOptions);
+    } else {
+      renderOptions(state.suggestedOptions);
+    }
     saveSession();
     state.isSending = false;
     updateSendButton();
