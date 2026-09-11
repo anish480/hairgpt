@@ -198,4 +198,5 @@ websockets==16.0
     #   uvicorn
 yarl==1.23.0
     # via aiohttp
+langfuse>=2.0
 python-multipart>=0.0.9

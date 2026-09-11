@@ -37,6 +37,7 @@ async def log_session(
     routine_data: dict | None = None,
     photo_uploaded: bool = False,
     prompt_version: str | None = None,
+    retrieval_chunks: list[dict] | None = None,
 ) -> None:
     try:
         pool = await get_pool()
@@ -72,5 +73,20 @@ async def log_session(
                 photo_uploaded,
                 prompt_version,
             )
+
+            if retrieval_chunks:
+                await conn.execute(
+                    """
+                    UPDATE chat_sessions
+                    SET metadata = jsonb_set(
+                        COALESCE(metadata, '{}'::jsonb),
+                        '{retrieval_chunks}',
+                        $2::jsonb
+                    )
+                    WHERE session_id = $1
+                    """,
+                    session_id,
+                    json.dumps(retrieval_chunks),
+                )
     except Exception:
         logger.exception("Failed to log chat session %s", session_id)

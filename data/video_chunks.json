@@ -179,5 +179,99 @@
       "title": "Heat Protection Spray (HPS) Tutorial",
       "youtube_id": "jrcc8MzktN4"
     }
+  },
+  {
+    "content": "Tutorial video: Hair Wax Stick Tutorial\n\nHow to use the Moxie On The Fly Hair Finishing Stick (wax stick) for taming flyaways, styling baby hairs, and creating sleek looks on dry, styled hair.\n\nWatch here: https://www.youtube.com/shorts/9nN6PGu6QpY\n\nProducts featured: on-the-fly-hair-finishing-stick\n\nBest for hair types: all",
+    "source_type": "video_tutorial",
+    "source_url": "https://www.youtube.com/shorts/9nN6PGu6QpY",
+    "source_id": "video_9nN6PGu6QpY",
+    "chunk_type": "video_tutorial",
+    "topic_tags": [
+      "wax_stick",
+      "flyaways",
+      "styling",
+      "finishing",
+      "tutorial"
+    ],
+    "product_refs": [
+      "on-the-fly-hair-finishing-stick"
+    ],
+    "hair_types": [],
+    "metadata": {
+      "public_url": "https://www.youtube.com/shorts/9nN6PGu6QpY",
+      "title": "Hair Wax Stick Tutorial",
+      "youtube_id": "9nN6PGu6QpY"
+    }
+  },
+  {
+    "content": "Tutorial video: HydroRepair Routine Tutorial\n\nComplete Moxie HydroRepair routine for damaged, chemically treated, or colored hair: Hyaluronic Acid Repairing Shampoo, Hyaluronic Acid Repairing Conditioner, and HA Serum application.\n\nWatch here: https://www.youtube.com/shorts/0At3-A58rc0\n\nProducts featured: hyaluronic-acid-repairing-shampoo, hyaluronic-acid-repairing-conditioner, hyaluronic-acid-hair-serum\n\nRoutine: hydrorepair_full\n\nBest for hair types: 1a, 1b, 1c, 2a",
+    "source_type": "video_tutorial",
+    "source_url": "https://www.youtube.com/shorts/0At3-A58rc0",
+    "source_id": "video_0At3-A58rc0",
+    "chunk_type": "video_tutorial",
+    "topic_tags": [
+      "damage",
+      "repair",
+      "hydration",
+      "hyaluronic_acid",
+      "colored_hair",
+      "routine",
+      "tutorial"
+    ],
+    "product_refs": [
+      "hyaluronic-acid-repairing-shampoo",
+      "hyaluronic-acid-repairing-conditioner",
+      "hyaluronic-acid-hair-serum"
+    ],
+    "hair_types": [
+      "1a",
+      "1b",
+      "1c",
+      "2a"
+    ],
+    "metadata": {
+      "public_url": "https://www.youtube.com/shorts/0At3-A58rc0",
+      "routines": [
+        "hydrorepair_full"
+      ],
+      "title": "HydroRepair Routine Tutorial",
+      "youtube_id": "0At3-A58rc0"
+    }
+  },
+  {
+    "content": "Tutorial video: Curly Hair Routine (Men) Tutorial\n\nComplete Moxie curly hair routine for men: shampoo, condition, curl cream on soaking wet hair, gel application, scrunching for curl clumping, and drying tips. Same products as the standard curly routine, presented for male users.\n\nWatch here: https://www.youtube.com/shorts/423hs6ch-ro\n\nProducts featured: gentle-cleansing-shampoo, ultra-hydrating-conditioner, super-defining-curl-cream, flexi-styling-serum-gel\n\nRoutine: curly_full_male\n\nBest for hair types: 3a, 3b, 3c",
+    "source_type": "video_tutorial",
+    "source_url": "https://www.youtube.com/shorts/423hs6ch-ro",
+    "source_id": "video_423hs6ch-ro",
+    "chunk_type": "video_tutorial",
+    "topic_tags": [
+      "curls",
+      "male",
+      "men",
+      "hold",
+      "hydration",
+      "routine",
+      "tutorial"
+    ],
+    "product_refs": [
+      "gentle-cleansing-shampoo",
+      "ultra-hydrating-conditioner",
+      "super-defining-curl-cream",
+      "flexi-styling-serum-gel"
+    ],
+    "hair_types": [
+      "3a",
+      "3b",
+      "3c"
+    ],
+    "metadata": {
+      "public_url": "https://www.youtube.com/shorts/423hs6ch-ro",
+      "routines": [
+        "curly_full_male"
+      ],
+      "title": "Curly Hair Routine (Men) Tutorial",
+      "youtube_id": "423hs6ch-ro",
+      "gender": "Male"
+    }
   }
 ]

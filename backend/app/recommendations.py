@@ -58,6 +58,61 @@ TREAT_SCALP_SERUM = [
 ]
 
 
+SAMPLER_MAP = {
+    "weightless-leave-in-conditioner": "weightless-leave-in-conditioner-sampler",
+    "flexi-styling-serum-gel": "flexi-styling-serum-gel-sampler",
+    "super-defining-curl-cream": "super-defining-curl-cream-sampler",
+    "gentle-cleansing-shampoo": "gentle-cleansing-shampoo-sampler",
+    "ultra-hydrating-conditioner": "ultra-hydrating-conditioner-sampler",
+}
+
+TRAVEL_MAP = {
+    "weightless-leave-in-conditioner": "weightless-leave-in-conditioner-travel-size",
+    "flexi-styling-serum-gel": "flexi-styling-serum-gel-travel-size",
+    "super-defining-curl-cream": "super-defining-curl-cream-travel-size",
+    "gentle-cleansing-shampoo": "gentle-cleansing-shampoo-travel-size",
+    "ultra-hydrating-conditioner": "ultra-hydrating-conditioner-travel-size",
+}
+
+SAMPLER_SET_MAP = {
+    "wavy": "moxie-wavy-sampler-set",
+    "curly": "moxie-curly-sampler-set",
+}
+
+TRAVEL_ROUTINE_MAP = {
+    "wavy": "the-moxie-wavy-travel-routine",
+    "curly": "the-moxie-curly-travel-routine",
+}
+
+
+def _get_trial_option(handle: str) -> dict | None:
+    result = {}
+
+    travel_h = TRAVEL_MAP.get(handle)
+    if travel_h and travel_h in PRODUCT_CATALOG:
+        info = PRODUCT_CATALOG[travel_h]
+        price = info.get("price", "")
+        if price and price not in ("₹0", "Rs. 0.00", ""):
+            result["travel"] = {
+                "handle": travel_h,
+                "name": info.get("name", travel_h),
+                "price": price,
+                "url": info.get("url", ""),
+                "image": info.get("image_src", ""),
+            }
+
+    sampler_h = SAMPLER_MAP.get(handle)
+    if sampler_h and sampler_h in PRODUCT_CATALOG:
+        info = PRODUCT_CATALOG[sampler_h]
+        result["sampler"] = {
+            "handle": sampler_h,
+            "name": info.get("name", sampler_h),
+            "price": "Free",
+        }
+
+    return result if result else None
+
+
 _EXCLUDED_SUFFIXES = ("-sampler", "-15ml", "-10ml")
 _COMBO_KEYWORDS = ("duo", "trio", "routine", "combo", "rinse-refill", "copy", "pouch", "set")
 
@@ -116,6 +171,8 @@ def recommend_routine(
     is_chemically_treated: bool = False,
     is_colored: bool = False,
     has_scalp_concern: bool = False,
+    user_experience: str = "novice",
+    wants_wash: bool = True,
 ) -> dict:
     """Build a personalised step-by-step routine by composing product lines.
 
@@ -188,11 +245,65 @@ def recommend_routine(
 
     routine_label = " + ".join(routine_names) if routine_names else "Custom Routine"
 
+    # --- Determine cohort ---
+    is_styling_concern = primary_concern in ("wave_definition", "curl_definition", "style")
+    is_scalp_primary = has_scalp_concern and primary_concern == "scalp"
+
+    if is_scalp_primary and is_styling_concern:
+        cohort = "combined"
+    elif is_scalp_primary:
+        cohort = "concern"
+    elif is_styling_concern:
+        cohort = "styling"
+    else:
+        cohort = "general"
+
+    # --- Phase tagging for novice users ---
+    if user_experience == "novice":
+        wash_handles = [h for h, _, _ in WASH_GENTLE + WASH_HYDROREPAIR + WASH_SCALP]
+        style_handles = [h for h, _, _ in STYLE_WAVY + STYLE_CURLY + TREAT_FRIZZ]
+        treat_handles = [h for h, _, _ in TREAT_FRIZZ + TREAT_HYDROREPAIR_SERUM + TREAT_SCALP_SERUM]
+
+        for step in steps:
+            step["phase"] = "foundation"
+
+        if cohort == "styling":
+            for step in steps:
+                if step["handle"] in wash_handles:
+                    if not wants_wash:
+                        step["phase"] = "supporting"
+                else:
+                    step["phase"] = "foundation"
+        elif cohort == "concern":
+            for step in steps:
+                if step.get("optional"):
+                    step["phase"] = "enhancement"
+        elif cohort == "combined":
+            for step in steps:
+                if step["handle"] in style_handles:
+                    step["phase"] = "enhancement"
+        else:
+            for step in steps:
+                if step["handle"] in treat_handles:
+                    step["phase"] = "enhancement"
+
+        for step in steps:
+            if step.get("phase") == "enhancement":
+                trial = _get_trial_option(step["handle"])
+                if trial:
+                    step["trial_option"] = trial
+    else:
+        for step in steps:
+            step["phase"] = "full"
+        cohort = "full"
+
     return {
         "routine": routine_label,
         "steps": steps,
         "reasoning": reasoning,
         "total_steps": len(steps),
+        "user_experience": user_experience,
+        "cohort": cohort,
         "inputs": {
             "hair_type": hair_type,
             "formation": formation,
@@ -204,6 +315,67 @@ def recommend_routine(
             "has_scalp_concern": has_scalp_concern,
         },
     }
+
+
+def _check_compatibility(formation: str, steps: list[dict]) -> list[str]:
+    warnings = []
+    handles = [s["handle"] for s in steps]
+
+    if "frizz-fighting-hair-serum" in handles and formation in ("curly",):
+        warnings.append(
+            "Frizz Fighting Serum isn't designed for curly routines — "
+            "it can weigh down curl definition. Consider the styling duo instead."
+        )
+    if "frizz-fighting-hair-serum" in handles and formation == "wavy":
+        warnings.append(
+            "For wavier patterns (2B/2C), the Wavy Vibe Setter duo "
+            "handles frizz AND definition. The serum is best for straighter textures."
+        )
+
+    ha_present = "hyaluronic-acid-hair-serum" in handles
+    styling_present = any(
+        h in handles for h in
+        ["weightless-leave-in-conditioner", "super-defining-curl-cream", "flexi-styling-serum-gel"]
+    )
+    if ha_present and styling_present:
+        warnings.append(
+            "HA Serum can't be layered with leave-in or curl cream — "
+            "it weighs down texture. Your HydroRepair wash already delivers repair."
+        )
+
+    return warnings
+
+
+def adjust_routine(
+    current_inputs: dict,
+    adjustment_type: str,
+    new_concern: str | None = None,
+) -> dict:
+    inputs = dict(current_inputs)
+
+    if adjustment_type == "change_concern" and new_concern:
+        inputs["primary_concern"] = new_concern
+    elif adjustment_type == "add_scalp":
+        inputs["has_scalp_concern"] = True
+    elif adjustment_type == "drop_scalp":
+        inputs["has_scalp_concern"] = False
+    elif adjustment_type == "swap_to_gentle":
+        inputs["primary_concern"] = "general_care"
+        inputs["is_chemically_treated"] = False
+        inputs["is_colored"] = False
+    elif adjustment_type == "swap_to_hydrorepair":
+        inputs["primary_concern"] = "damage_repair"
+    elif adjustment_type == "swap_to_scalp":
+        inputs["has_scalp_concern"] = True
+
+    result = recommend_routine(**inputs)
+
+    warnings = _check_compatibility(inputs.get("formation", "wavy"), result["steps"])
+    if warnings:
+        result["compatibility_warnings"] = warnings
+
+    result["adjusted_from"] = current_inputs
+    return result
 
 
 def get_product(product_handle: str) -> dict:

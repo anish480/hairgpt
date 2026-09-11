@@ -15,12 +15,12 @@ from app.db import get_pool
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT_VERSION = "1.1.0"
+SYSTEM_PROMPT_VERSION = "2.0.0"
 INPUT_GUARDRAIL_VERSION = "1.0.0"
 OUTPUT_GUARDRAIL_VERSION = "1.0.0"
 CLASSIFIER_VERSION = "1.1.0"
-TOOLS_VERSION = "1.0.0"
-RECOMMENDATIONS_VERSION = "1.0.0"
+TOOLS_VERSION = "2.0.0"
+RECOMMENDATIONS_VERSION = "2.0.0"
 
 GENERATION_PARAMS = {
     "chat": {"model": "gemini-2.5-flash", "temperature": 0.7, "max_output_tokens": 1024, "thinking_budget": 0},

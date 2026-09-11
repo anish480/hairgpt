@@ -65,9 +65,17 @@ async def retrieve(query: str, top_k: int = 5) -> list[RetrievedChunk]:
     ]
 
 
-def format_retrieval_context(chunks: list[RetrievedChunk]) -> str:
+def format_retrieval_context(chunks: list[RetrievedChunk]) -> tuple[str, list[dict]]:
     parts = []
+    chunk_meta = []
     for i, c in enumerate(chunks, 1):
         label = c.chunk_type.replace("_", " ").title()
-        parts.append(f"[{label}] {c.content}")
-    return "\n\n---\n\n".join(parts)
+        parts.append(f"[{label} | ref:{c.id}] {c.content}")
+        chunk_meta.append({
+            "chunk_id": c.id,
+            "chunk_type": c.chunk_type,
+            "source_id": c.source_id,
+            "score": round(c.score, 4),
+            "product_refs": c.product_refs,
+        })
+    return "\n\n---\n\n".join(parts), chunk_meta

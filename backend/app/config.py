@@ -17,5 +17,9 @@ class Settings(BaseSettings):
     db_user: str = "hairgpt-app"
     db_password_secret: str = "db-app-password"
 
+    langfuse_public_key: str = ""
+    langfuse_secret_key: str = ""
+    langfuse_host: str = ""
+
 
 settings = Settings()

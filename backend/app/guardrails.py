@@ -1,4 +1,4 @@
-"""Input + output guardrails for MoxieBuddy.
+"""Input + output guardrails for HairGPT.
 
 Input guardrail: screens user messages before they reach the main model.
 Output guardrail: screens model responses before they reach the user.
@@ -8,6 +8,7 @@ Both use Gemini Flash with tight classifier prompts.
 from __future__ import annotations
 
 import logging
+import time
 
 from google.genai import types
 
@@ -16,7 +17,7 @@ from app.llm import _client, FLASH
 logger = logging.getLogger(__name__)
 
 _GUARDRAIL_PROMPT = """\
-You are a strict topic-gate for a hair-care chatbot called MoxieBuddy.
+You are a strict topic-gate for a hair-care chatbot called HairGPT.
 
 ALLOWED topics (pass through):
 - Hair care, hair types, hair concerns, hair products, hair routines
@@ -76,6 +77,7 @@ Users often misspell product names ("sasches" for sachets, "condtioner", "shampp
 
 async def check_input(user_message: str, history: list[dict] | None = None) -> tuple[bool, str]:
     """Return (is_allowed, redirect_message). If allowed, redirect_message is empty."""
+    start = time.monotonic()
     try:
         context_summary = ""
         if history and len(history) > 0:
@@ -102,18 +104,25 @@ async def check_input(user_message: str, history: list[dict] | None = None) -> t
         )
 
         result = (resp.text or "").strip()
+        latency_ms = int((time.monotonic() - start) * 1000)
+
+        verdict = "BLOCK" if result.startswith("BLOCK:") else "ALLOW"
+        logger.info(
+            "guardrail.input | verdict=%s | latency_ms=%d | msg_preview=%.80s",
+            verdict, latency_ms, user_message,
+        )
 
         if result.startswith("BLOCK:"):
             redirect_msg = result[6:].strip()
             if not redirect_msg:
                 redirect_msg = "I'm all about hair care! Got a hair question for me?"
-            logger.info("Guardrail BLOCKED: %s → %s", user_message[:80], redirect_msg)
             return False, redirect_msg
 
         return True, ""
 
     except Exception:
-        logger.exception("Guardrail check failed, allowing message through")
+        latency_ms = int((time.monotonic() - start) * 1000)
+        logger.exception("guardrail.input | verdict=ERROR | latency_ms=%d", latency_ms)
         return True, ""
 
 
@@ -122,7 +131,7 @@ async def check_input(user_message: str, history: list[dict] | None = None) -> t
 # ---------------------------------------------------------------------------
 
 _OUTPUT_GUARDRAIL_PROMPT = """\
-You are a strict output filter for a hair-care chatbot called MoxieBuddy.
+You are a strict output filter for a hair-care chatbot called HairGPT.
 Your job: check if the chatbot's response stays on topic (hair, scalp, styling, Moxie Beauty products, greetings, and customer service).
 
 PASS these responses:
@@ -159,6 +168,7 @@ async def check_output(
     user_message: str,
 ) -> tuple[bool, str]:
     """Return (is_safe, sanitized_response). If safe, sanitized_response == response_text."""
+    start = time.monotonic()
     try:
         prompt = f"User said: {user_message[:300]}\n\nChatbot responded: {response_text[:1000]}"
 
@@ -175,17 +185,19 @@ async def check_output(
         )
 
         verdict = (resp.text or "").strip().upper()
+        latency_ms = int((time.monotonic() - start) * 1000)
+
+        logger.info(
+            "guardrail.output | verdict=%s | latency_ms=%d | msg=%.80s | resp=%.120s",
+            verdict, latency_ms, user_message, response_text,
+        )
 
         if verdict == "FAIL":
-            logger.warning(
-                "Output guardrail FAILED | user: %s | response: %s",
-                user_message[:80],
-                response_text[:200],
-            )
             return False, _OUTPUT_FALLBACK
 
         return True, response_text
 
     except Exception:
-        logger.exception("Output guardrail check failed, allowing response through")
+        latency_ms = int((time.monotonic() - start) * 1000)
+        logger.exception("guardrail.output | verdict=ERROR | latency_ms=%d", latency_ms)
         return True, response_text

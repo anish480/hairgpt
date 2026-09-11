@@ -19,6 +19,12 @@ MAX_REQUESTS_PER_MINUTE = 10
 MAX_SESSION_TOKENS = 15_000
 _WINDOW_SECONDS = 60
 
+ENGAGED_WARNING_RATIO = 0.88
+ENGAGED_CRITICAL_RATIO = 0.95
+
+DEFAULT_WARNING_RATIO = 0.70
+DEFAULT_CRITICAL_RATIO = 0.90
+
 _request_log: dict[str, list[float]] = defaultdict(list)
 
 
@@ -49,6 +55,33 @@ async def get_session_tokens(session_id: str) -> int:
     except Exception:
         logger.exception("Failed to read session tokens for %s", session_id)
         return 0
+
+
+async def get_budget_status(session_id: str, is_engaged: bool = True) -> dict:
+    used = await get_session_tokens(session_id)
+    limit = MAX_SESSION_TOKENS
+    ratio = used / limit if limit > 0 else 0
+    remaining = max(0, limit - used)
+
+    warning_ratio = ENGAGED_WARNING_RATIO if is_engaged else DEFAULT_WARNING_RATIO
+    critical_ratio = ENGAGED_CRITICAL_RATIO if is_engaged else DEFAULT_CRITICAL_RATIO
+
+    if ratio >= 1.0:
+        status = "exceeded"
+    elif ratio >= critical_ratio:
+        status = "critical"
+    elif ratio >= warning_ratio:
+        status = "warning"
+    else:
+        status = "ok"
+
+    return {
+        "status": status,
+        "used": used,
+        "limit": limit,
+        "remaining": remaining,
+        "is_engaged": is_engaged,
+    }
 
 
 async def check_token_budget(session_id: str) -> bool:

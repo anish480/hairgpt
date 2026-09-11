@@ -1,8 +1,8 @@
 /**
- * MoxieBuddy Chat Widget — Shopify Injection Script
+ * HairGPT Chat Widget — Shopify Injection Script
  * Drop this into a <script> tag in theme.liquid to add the floating chat widget.
  *
- * Configuration (set via window.MoxieBuddyConfig before loading this script):
+ * Configuration (set via window.HairGPTConfig before loading this script):
  *   - apiBaseUrl:  Backend URL (default: "http://localhost:8000")
  *   - shopContext: { pageType, productHandle, customerId } — typically set from Liquid
  */
@@ -11,13 +11,13 @@
 
   /* ───────────────────────── Configuration ───────────────────────── */
 
-  var cfg = window.MoxieBuddyConfig || {};
+  var cfg = window.HairGPTConfig || {};
   var API = (cfg.apiBaseUrl || "http://localhost:8000").replace(/\/+$/, "");
   var shopContext = cfg.shopContext || {};
 
   /* ───────────────────────── Session persistence ───────────────────────── */
 
-  var STORAGE_KEY = "moxiebuddy_session";
+  var STORAGE_KEY = "hairgpt_session";
 
   function loadSession() {
     try {
@@ -56,7 +56,7 @@
   var _exitIntentFired = false;
   var _userOpenedWidget = false;
   var _mobileIdleTimer = null;
-  var EXIT_STORAGE_KEY = "moxiebuddy_exit_fired";
+  var EXIT_STORAGE_KEY = "hairgpt_exit_fired";
   try { _exitIntentFired = sessionStorage.getItem(EXIT_STORAGE_KEY) === "1"; } catch (_) {}
 
   function isMobileViewport() { return (window.innerWidth || 0) <= 440; }
@@ -323,8 +323,8 @@
     // Floating bubble
     var bubble = document.createElement("button");
     bubble.id = "mb-bubble";
-    bubble.setAttribute("aria-label", "Open MoxieBuddy chat");
-    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"></video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="MoxieBuddy">';
+    bubble.setAttribute("aria-label", "Open HairGPT chat");
+    bubble.innerHTML = '<video autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture><source src="' + MASCOT_ICON_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_ICON_VIDEO_WEBM + '" type="video/webm"></video><img class="mb-vid-fallback" src="' + MASCOT_ICON_IMG + '" alt="HairGPT">';
     var bubbleVid = bubble.querySelector("video");
     var bubbleFallback = bubble.querySelector(".mb-vid-fallback");
     var bubbleVidTimer = setTimeout(function () {
@@ -359,11 +359,10 @@
     homeScreen.id = "mb-home-screen";
     homeScreen.innerHTML =
       '<div class="mb-mascot-wrap"><video id="mb-home-mascot" autoplay loop muted playsinline disableRemotePlayback disablePictureInPicture><source src="' + MASCOT_VIDEO_MP4 + '" type="video/mp4; codecs=hvc1"><source src="' + MASCOT_VIDEO_WEBM + '" type="video/webm"></video><div class="mb-mascot-shadow"></div></div>' +
-      '<div id="mb-section-header">Feeling <strong>stranded</strong> about your hair?<br>We’re here to help!</div>' +
+      '<div id="mb-section-header">Hey! I’m <strong>HairGPT</strong> — your hair-care sidekick 🧴 Upload a photo and I’ll figure out your exact hair type!</div>' +
       '<div id="mb-suggested-questions">' +
-        '<div class="mb-suggestion-card" data-question="What is my hair type?">What is my hair type?</div>' +
-        '<div class="mb-suggestion-card" data-question="What should I use for dandruff?">What should I use for dandruff?</div>' +
-        '<div class="mb-suggestion-card" data-question="What&#39;s the difference between Curl Cream and Serum Gel?">What&#39;s the difference between Curl Cream and Serum Gel?</div>' +
+        '<div class="mb-suggestion-card" data-question="I need a routine">I need a routine</div>' +
+        '<div class="mb-suggestion-card" data-question="I have a product question">I have a product question</div>' +
       '</div>' +
       '<div id="mb-action-buttons">' +
         '<button class="mb-action-btn" id="mb-upload-photo-btn">' +
@@ -1007,7 +1006,7 @@
         callback(true);
       })
       .catch(function (err) {
-        console.error("MoxieBuddy cart error:", err);
+        console.error("HairGPT cart error:", err);
         callback(false);
       });
   }
@@ -1048,7 +1047,7 @@
     saveSession();
     state.isSending = false;
     updateSendButton();
-    console.error("MoxieBuddy error:", err);
+    console.error("HairGPT error:", err);
   }
 
   /* ───────────────────────── Photo choice modal ───────────────────────── */

@@ -1,4 +1,4 @@
-"""MoxieBuddy demo UI — Streamlit chat interface.
+"""HairGPT demo UI — Streamlit chat interface.
 
 Run:
     # Terminal 1: Start the FastAPI backend
@@ -16,7 +16,7 @@ import streamlit as st
 
 API_URL = "http://localhost:8000"
 
-# --- MoxieBuddy avatar SVG (gender-neutral, squarish face, curly medium hair) ---
+# --- HairGPT avatar SVG (gender-neutral, squarish face, curly medium hair) ---
 
 _AVATAR_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
   <defs>
@@ -114,7 +114,7 @@ def render_message_with_videos(text: str) -> None:
 # --- Page config ---
 
 st.set_page_config(
-    page_title="MoxieBuddy",
+    page_title="HairGPT",
     page_icon="✨",
     layout="centered",
 )
@@ -187,8 +187,8 @@ st.markdown(
     </style>
 
     <div class="header-row">
-        <img src="{_AVATAR_URI}" alt="MoxieBuddy" />
-        <h1>MoxieBuddy</h1>
+        <img src="{_AVATAR_URI}" alt="HairGPT" />
+        <h1>HairGPT</h1>
     </div>
     """,
     unsafe_allow_html=True,

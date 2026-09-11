@@ -39,7 +39,7 @@ async def lifespan(_app: FastAPI):
     await close_db()
 
 
-app = FastAPI(title="MoxieBuddy Backend", version="0.0.1", lifespan=lifespan)
+app = FastAPI(title="HairGPT Backend", version="0.0.1", lifespan=lifespan)
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
@@ -107,7 +107,7 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
             suggested_options=[],
         )
 
-    response_text, updated_history, options, multi_options, routine_data, output_tokens = await chat(req.message, req.history)
+    response_text, updated_history, options, multi_options, routine_data, output_tokens, chunk_meta = await chat(req.message, req.history, session_id=session_id)
 
     if output_tokens > 0:
         await record_tokens(session_id, output_tokens)
@@ -125,6 +125,7 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
         routine_data=routine_data,
         photo_uploaded=photo_uploaded,
         prompt_version=get_bundle_fingerprint(),
+        retrieval_chunks=chunk_meta,
     )
 
     return ChatResponse(
@@ -217,19 +218,19 @@ PREVIEW_HTML = """\
     <span>|</span>
     <span>Click the chat bubble to open the widget</span>
     <span>|</span>
-    <button onclick="localStorage.removeItem('moxiebuddy_session');location.reload();">Reset Chat</button>
+    <button onclick="localStorage.removeItem('hairgpt_session');location.reload();">Reset Chat</button>
   </div>
   <div class="site">
     <h1>Moxie Beauty</h1>
     <p>This is a simulated storefront. The HairGPT chat widget floats on top of the page.</p>
   </div>
   <script>
-    window.MoxieBuddyConfig = {
+    window.HairGPTConfig = {
       apiBaseUrl: window.location.origin,
       shopContext: { pageType: "index", productHandle: "", customerId: "" }
     };
   </script>
-  <script src="/static/moxiebuddy-widget.js"></script>
+  <script src="/static/hairgpt-widget.js"></script>
 </body>
 </html>
 """
