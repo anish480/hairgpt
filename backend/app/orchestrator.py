@@ -248,11 +248,16 @@ async def chat(
 
     is_photo_context = "[User uploaded a hair photo" in user_message or "[Hair photo analysis:" in user_message
     if not is_photo_context:
-        ig_span = trace.span(name="input_guardrail", input={"msg_preview": user_message[:80]}) if trace else None
+        ig_gen = trace.generation(
+            name="input_guardrail",
+            model=FLASH,
+            model_parameters={"temperature": 0.0, "max_output_tokens": 100},
+            input={"msg_preview": user_message[:80]},
+        ) if trace else None
         ig_start = time.monotonic()
         allowed, redirect_msg = await check_input(user_message, history)
-        if ig_span:
-            ig_span.end(output={"verdict": "ALLOW" if allowed else "BLOCK", "latency_ms": int((time.monotonic() - ig_start) * 1000)})
+        if ig_gen:
+            ig_gen.end(output={"verdict": "ALLOW" if allowed else "BLOCK"}, level="DEFAULT")
         if not allowed:
             if trace:
                 trace.update(output={"blocked": True})
@@ -303,7 +308,13 @@ async def chat(
     )
 
     client = _client()
-    gen_span = trace.span(name="generation", input={"model": FLASH, "temperature": 0.7}) if trace else None
+    gen_obs = trace.generation(
+        name="generation",
+        model=FLASH,
+        model_parameters={"temperature": 0.7, "max_output_tokens": 1024},
+        input={"message_count": len(contents)},
+    ) if trace else None
+    gen_start = time.monotonic()
     resp = await client.aio.models.generate_content(
         model=FLASH, contents=contents, config=config,
     )
@@ -343,18 +354,29 @@ async def chat(
     if resp.usage_metadata:
         output_tokens = getattr(resp.usage_metadata, "candidates_token_count", 0) or 0
 
-    if gen_span:
-        gen_span.end(output={"output_tokens": output_tokens, "response_preview": response_text[:200]})
+    if gen_obs:
+        input_tokens = getattr(resp.usage_metadata, "prompt_token_count", 0) or 0
+        total_tokens = getattr(resp.usage_metadata, "total_token_count", 0) or 0
+        gen_obs.end(
+            output=response_text[:500],
+            usage={"input": input_tokens, "output": output_tokens, "total": total_tokens},
+            metadata={"latency_ms": int((time.monotonic() - gen_start) * 1000)},
+        )
 
     display_text, suggested_options, multi_select_options = _parse_options(response_text)
 
     display_text = _inject_missing_video_url(display_text, chunks)
 
-    og_span = trace.span(name="output_guardrail", input={"resp_preview": display_text[:120]}) if trace else None
+    og_gen = trace.generation(
+        name="output_guardrail",
+        model=FLASH,
+        model_parameters={"temperature": 0.0, "max_output_tokens": 5},
+        input={"resp_preview": display_text[:120]},
+    ) if trace else None
     og_start = time.monotonic()
     is_safe, sanitized = await check_output(display_text, user_message)
-    if og_span:
-        og_span.end(output={"verdict": "PASS" if is_safe else "FAIL", "latency_ms": int((time.monotonic() - og_start) * 1000)})
+    if og_gen:
+        og_gen.end(output={"verdict": "PASS" if is_safe else "FAIL"})
     if not is_safe:
         display_text = sanitized
         suggested_options = ["I need a routine", "I have a product question", "Upload a photo of my hair"]
